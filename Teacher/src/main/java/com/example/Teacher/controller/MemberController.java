@@ -12,6 +12,7 @@ import com.example.Teacher.entities.*;
 import com.example.Teacher.service.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -27,6 +28,10 @@ public class MemberController {
     private semesterService semesterService;
     @Autowired
     private pickedSectionClassService pickedSectionClassService;
+    @Autowired
+    private departmentRepository departmentRepository;
+    @Autowired
+    private subjectService subjectService;
     @GetMapping("/login")
     public String login(){
         return "login-form";
@@ -49,12 +54,29 @@ public class MemberController {
             staff = staffService.findStaff(member.getId());
             teacher = teacherService.findTeacher(staff.getIdMenber());
 
-            List<Semester> semesters = semesterService.getAllSemester();
-            List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
-            modelMap.addAttribute("listSemester",semesters);
-            modelMap.addAttribute("listPicked",pickedSectionClasses);
-            session.setAttribute("teacher",teacher);
-            return "home";
+            List<Department> departments = departmentRepository.getAllByIdTeacher(staff.getIdMenber());
+            List<Subject> subjectList = new ArrayList<>();
+            for (Department d :departments){
+                List<Subject> list = subjectService.getAll(d.getId());
+                for (Subject s :list) subjectList.add(s);
+            }
+            modelMap.addAttribute("listSubject",subjectList);
+
+
+            if(teacher.getPosittion()==1){
+                List<Teacher> teacherList = new ArrayList<>();
+                for (Department d : departments){
+                    List<Teacher> list = teacherService.getAllTeacherByIdDepartment(d.getId());
+                    for (Teacher t : teacherList) teacherList.add(t);
+                }
+                modelMap.addAttribute("teacherList" ,teacherList);
+                return "review-home";
+            }else {
+                List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
+                modelMap.addAttribute("listPicked",pickedSectionClasses);
+                session.setAttribute("teacher",teacher);
+                return "home";
+            }
         }else {
             modelMap.addAttribute("error","Tai khoan mat khau khong chinh xac");
             return "login-form";

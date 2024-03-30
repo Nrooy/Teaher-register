@@ -9,4 +9,8 @@ public interface pickedSectionClassService {
     public List<PickedSectionClass> getAllbyId(int id);
 
     public void deleteById(int id);
+
+    public List<PickedSectionClass> getAllByIdDepartment(int id);
+
+    public PickedSectionClass findById(int id);
 }

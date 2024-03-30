@@ -27,4 +27,14 @@ public class pickedSectionClassServiceImpl implements pickedSectionClassService{
         pickedSectionClassRepository.deleteById(id);
     }
 
+    @Override
+    public List<PickedSectionClass> getAllByIdDepartment(int id) {
+        return pickedSectionClassRepository.getAllByIdDepartment(id);
+    }
+
+    @Override
+    public PickedSectionClass findById(int id) {
+        return pickedSectionClassRepository.findById(id).orElse(null);
+    }
+
 }

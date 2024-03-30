@@ -24,6 +24,9 @@ public class PickedSectionClass {
     @Column(name = "isPicked")
     private int isPicked;
 
+    @Column(name = "review")
+    private int review;
+
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;

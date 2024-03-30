@@ -10,4 +10,6 @@ public interface pickedSectionClassRepository extends JpaRepository<PickedSectio
 
     @Query (value = "select p from PickedSectionClass p where p.teacher.id =:id")
     public List<PickedSectionClass> getById(int id);
+    @Query(value = "select p from PickedSectionClass p where p.teacher.department.id=:id")
+    public List<PickedSectionClass>getAllByIdDepartment(int id);
 }

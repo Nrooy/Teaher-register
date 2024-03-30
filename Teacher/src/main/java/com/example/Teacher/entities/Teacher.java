@@ -18,6 +18,9 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "posittion")
+    private int posittion;
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;

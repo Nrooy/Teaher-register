@@ -43,6 +43,12 @@ public class SubjectController {
         modelMap.addAttribute("listSectionClass",sectionClassList);
         return "";
     }
+    @GetMapping("/review/subject")
+    public String getAllTeacherAndSectionClass(HttpSession session,ModelMap modelMap){
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
+        return "review";
+    }
     public List<SubjectOfSemester> getALlSubjectOfSemesterBySubject(int id){
         List<SubjectOfSemester> list = new ArrayList<>();
         list = subjectOfSemesterService.finfAllSosByIdSubject(id);
@@ -56,4 +62,5 @@ public class SubjectController {
         }
         return  list1;
     }
+
 }

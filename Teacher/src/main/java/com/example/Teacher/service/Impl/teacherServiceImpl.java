@@ -5,6 +5,8 @@ import com.example.Teacher.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class teacherServiceImpl implements teacherService {
 
@@ -13,5 +15,10 @@ public class teacherServiceImpl implements teacherService {
     @Override
     public Teacher findTeacher(int idStaff) {
         return respository.findTeacher(idStaff);
+    }
+
+    @Override
+    public List<Teacher> getAllTeacherByIdDepartment(int idDepartment) {
+        return respository.findAllByIdDepartment(idDepartment);
     }
 }
