@@ -16,4 +16,9 @@ public class subjectOfSemecterServiceImpl implements subjectOfSemesterService{
     public List<SubjectOfSemester> findAllSos(int id) {
         return subjectOfSemesterRepository.findSubjectOfSemesterByIdSemester(id);
     }
+
+    @Override
+    public List<SubjectOfSemester> finfAllSosByIdSubject(int id) {
+        return subjectOfSemesterRepository.findSubjectOfSemesterBySubject(id);
+    }
 }

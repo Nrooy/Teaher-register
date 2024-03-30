@@ -21,4 +21,9 @@ public class sectionClassServiceImpl implements sectionClassService{
     public SectionClass findById(int id) {
         return sectionClassRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<SectionClass> getAll() {
+        return sectionClassRepository.findAll();
+    }
 }

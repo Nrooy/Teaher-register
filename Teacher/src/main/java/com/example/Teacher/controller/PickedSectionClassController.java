@@ -26,21 +26,21 @@ public class PickedSectionClassController {
     sectionClassService sectionClassService;
     @Autowired
     semesterService semesterService;
-    @GetMapping("/save_picked/{id}")
-    public String savePiked(@PathVariable Integer id , HttpSession session , ModelMap modelMap){
-        PickedSectionClass pickedSectionClass = new PickedSectionClass();
-
-        pickedSectionClass.setTeacher((Teacher) session.getAttribute("teacher"));
-        pickedSectionClass.setPickedTime(Time.valueOf(LocalTime.now()));
-        pickedSectionClass.setIsPicked(1);
-        pickedSectionClass.setSectionClass(sectionClassService.findById(id));
-
-        pickedSectionClassService.save(pickedSectionClass);
-
-        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(((Teacher)session.getAttribute("teacher")).getId());
-        modelMap.addAttribute("listPicked",pickedSectionClasses);
-        return "redirect:/home1";
-    }
+//    @GetMapping("/save_picked/{id}")
+//    public String savePiked(@PathVariable Integer id , HttpSession session , ModelMap modelMap){
+//        PickedSectionClass pickedSectionClass = new PickedSectionClass();
+//
+//        pickedSectionClass.setTeacher((Teacher) session.getAttribute("teacher"));
+//        pickedSectionClass.setPickedTime(Time.valueOf(LocalTime.now()));
+//        pickedSectionClass.setIsPicked(1);
+//        pickedSectionClass.setSectionClass(sectionClassService.findById(id));
+//
+//        pickedSectionClassService.save(pickedSectionClass);
+//
+//        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(((Teacher)session.getAttribute("teacher")).getId());
+//        modelMap.addAttribute("listPicked",pickedSectionClasses);
+//        return "redirect:/home1";
+//    }
     @GetMapping("/home1")
     public String returnHome(HttpSession session , ModelMap modelMap){
         List<Semester> semesters = semesterService.getAllSemester();

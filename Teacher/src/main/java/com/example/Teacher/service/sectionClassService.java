@@ -8,4 +8,6 @@ public interface sectionClassService {
     public List<SectionClass> getSectionClass( int idSoS );
 
     public SectionClass findById(int id);
+
+    public List<SectionClass> getAll();
 }

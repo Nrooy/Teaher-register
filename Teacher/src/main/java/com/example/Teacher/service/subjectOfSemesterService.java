@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface subjectOfSemesterService {
     public List<SubjectOfSemester> findAllSos(int id);
+
+    public List<SubjectOfSemester> finfAllSosByIdSubject(int id);
 }
