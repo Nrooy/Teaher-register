@@ -25,8 +25,6 @@ public class MemberController {
     @Autowired
     private staffService staffService;
     @Autowired
-    private semesterService semesterService;
-    @Autowired
     private pickedSectionClassService pickedSectionClassService;
     @Autowired
     private departmentRepository departmentRepository;

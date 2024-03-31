@@ -112,15 +112,15 @@ public class SectionClassController {
         for(Schedule sch : scheduleList){
             //Lấy week
             List<Week> demow= weekService.getAllByIdSchdule(sch.getId());
-            Week w = demow.getFirst();
+            Week w = demow.get(0);
             weekList1.add(w);
             //Lấy Period
             List<Period> demop = periodService.getAllByIdSchedule(sch.getId());
-            Period p = demop.getFirst();
+            Period p = demop.get(0);
             periodList1.add(p);
             //Lấy day
             List<day> demod = dayService.getAllByIdSchedule(sch.getId());
-            day d =demod.getFirst();
+            day d =demod.get(0);
             dayList1.add(d);
         }
             //Week , Period , day , của Schedule
@@ -131,15 +131,15 @@ public class SectionClassController {
         for(Schedule sch : scheduleList){
             //Lấy week
             List<Week> demow= weekService.getAllByIdSchdule(sch.getId());
-            Week w = demow.getFirst();
+            Week w = demow.get(0);
             weekList2.add(w);
             //Lấy Period
             List<Period> demop = periodService.getAllByIdSchedule(sch.getId());
-            Period p = demop.getFirst();
+            Period p = demop.get(0);
             periodList2.add(p);
             //Lấy day
             List<day> demod = dayService.getAllByIdSchedule(sch.getId());
-            day d =demod.getFirst();
+            day d =demod.get(0);
             dayList2.add(d);
         }
             // So sánh
