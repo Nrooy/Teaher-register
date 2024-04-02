@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phê duyệt lịch đăng kí</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <h2>Phê duyệt lịch đăng kí</h2>
+
+  <!-- Dropdown list of courses -->
+  <div class="form-group">
+    <label for="coursesDropdown">Chọn môn học:</label>
+    <select class="form-control" id="coursesDropdown" onchange="loadClasses()">
+      <option value="course1">Môn học 1</option>
+      <option value="course2">Môn học 2</option>
+      <option value="course3">Môn học 3</option>
+      <!-- Add more options as needed -->
+    </select>
+  </div>
+
+  <!-- Table for class schedule approval -->
+  <table class="table">
+    <thead>
+    <tr>
+      <th>STT</th>
+      <th>Tên lớp học phần</th>
+      <th>Thời gian</th>
+      <th>Giảng viên có thể dạy</th>
+      <th>Phê duyệt</th>
+    </tr>
+    </thead>
+    <tbody id="classSchedule">
+    <!-- This section will be populated with class schedule based on selected course -->
+    </tbody>
+  </table>
+
+  <!-- Button to save approval -->
+  <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function loadClasses() {
+    var selectedCourse = $('#coursesDropdown').val();
+    // Here you can make an AJAX request to load classes based on selected course
+    // For demo purpose, let's assume classes are hardcoded
+
+    // Clear existing content
+    $('#classSchedule').empty();
+
+    // Example data (you can replace with actual data)
+    var classes = [
+      { stt: 1, name: "Lớp học phần 1", time: "Thứ 2, 8:00 - 10:00", teachers: ["Giảng viên A", "Giảng viên B"] },
+      { stt: 2, name: "Lớp học phần 2", time: "Thứ 3, 10:00 - 12:00", teachers: ["Giảng viên B", "Giảng viên C"] }
+      // Add more classes as needed
+    ];
+
+    // Populate table with classes
+    classes.forEach(function(cls) {
+      var row = '<tr>';
+      row += '<td>' + cls.stt + '</td>';
+      row += '<td>' + cls.name + '</td>';
+      row += '<td>' + cls.time + '</td>';
+      row += '<td>';
+      row += '<select class="form-control">';
+      cls.teachers.forEach(function(teacher) {
+        row += '<option value="' + teacher + '">' + teacher + '</option>';
+      });
+      row += '</select>';
+      row += '</td>';
+      row += '<td><input type="checkbox"></td>';
+      row += '</tr>';
+      $('#classSchedule').append(row);
+    });
+
+    // Randomly mark a teacher as selected for each class
+    $('#classSchedule tr').each(function() {
+      var randomIndex = Math.floor(Math.random() * $(this).find('select option').length);
+      $(this).find('select option').eq(randomIndex).prop('selected', true);
+    });
+  }
+
+  function saveApproval() {
+    // Here you can collect data for approval
+    var approvedClasses = [];
+    $('#classSchedule tr').each(function() {
+      var className = $(this).find('td:nth-child(2)').text();
+      var teacher = $(this).find('select').val();
+      var isApproved = $(this).find('input[type="checkbox"]').prop('checked');
+      if (isApproved) {
+        approvedClasses.push({ className: className, teacher: teacher });
+      }
+    });
+
+    // For demo purpose, let's just log approved classes
+    console.log(approvedClasses);
+    // You can perform further actions like sending data to the server for processing
+  }
+</script>
+
+</body>
+</html>

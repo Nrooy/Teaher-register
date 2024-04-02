@@ -20,10 +20,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each = "semester : ${listSemester} ">
+            <tr th:each = "semester : ${listSubject} ">
                 <td th:text="${semester.id}"></td>
-                <td th:text="${semester.year.name }"></td>
-                <td th:text="${semester.semesterOfYear.name }"></td>
+                <td th:text="${semester.name }"></td>
+                <td th:text="${semester.description }"></td>
                 <td>
                     <a th:href="'/subject-of-semester/'+${semester.id}" class="btn btn-primary btn-sm">Chọn</a>
                 </td>
