@@ -13,4 +13,6 @@ public interface pickedSectionClassService {
     public List<PickedSectionClass> getAllByIdDepartment(int id);
 
     public PickedSectionClass findById(int id);
+
+    List<PickedSectionClass> getAllbyTeacherID();
 }

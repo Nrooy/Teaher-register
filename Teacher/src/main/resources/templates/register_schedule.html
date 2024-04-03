@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng kí môn học</title>
+    <title>Đăng kí lịch dạy</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -12,7 +12,7 @@
     <div th:include="subTemplates/header-home.html"> </div>
     <br>
     <br>
-    <h2>Đăng kí môn học</h2>
+    <h2>Đăng kí lịch dạy</h2>
 
     <!-- Dropdown list of courses -->
 <!--    <div class="form-group">-->
@@ -63,24 +63,8 @@
     </script>
 
 
-
-    <!-- Available classes -->
-<!--    <h3>Các lớp học phần có thể đăng kí</h3>-->
-<!--    <table class="table" id="availableClassesTable" >-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>Tên lớp học phần</th>-->
-<!--            <th>Thời gian</th>-->
-<!--            <th>Chọn</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody id="availableClassesBody">-->
-<!--        &lt;!&ndash; This section will be populated with available classes using JavaScript &ndash;&gt;-->
-<!--        </tbody>-->
-<!--    </table>-->
-
-    <h3>Các lớp học phần có thể đăng kí</h3>
     <table class="table" id="availableClassesTable">
+        <!-- Tiêu đề bảng -->
         <thead>
         <tr>
             <th>Tên lớp học phần</th>
@@ -88,18 +72,37 @@
             <th>Chọn</th>
         </tr>
         </thead>
+        <!-- Dữ liệu lịch học -->
         <tbody id="availableClassesBody">
-        <!-- Thymeleaf iteration to populate table rows -->
-        <tr th:each="sectionClass : ${lis}">
-            <td th:text="${sectionClass.name}"></td>
-            <td th:text="${sectionClass.time}"></td>
+        <tr th:each="schedule : ${listSchedule}">
+            <td th:text="${schedule.getSectionClass().getName()}"></td>
+            <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
-                <!-- Thymeleaf checkbox -->
-                <input type="checkbox" th:id="'classCheckbox_' + ${sectionClass.id}" th:value="${sectionClass.id}">
+                <!-- Checkbox -->
+                <input type="checkbox" class="classCheckbox" data-id="${schedule.id}">
             </td>
         </tr>
         </tbody>
     </table>
+
+    <script>
+        $(document).ready(function() {
+            // Xử lý sự kiện khi checkbox được chọn
+            $('.classCheckbox').change(function() {
+                // Kiểm tra xem checkbox đã được chọn hay không
+                if ($(this).is(':checked')) {
+                    // Lấy giá trị id của lịch học được chọn từ thuộc tính data
+                    var selectedClassId = $(this).data('id');
+
+                    // Tạo URL mới với ID của lớp học phần
+                    var newURL = "/section-class/" + selectedClassId;
+
+                    // Chuyển hướng đến đường dẫn mới
+                    window.location.href = newURL;
+                }
+            });
+        });
+    </script>
 
 
     <!-- Registered classes -->

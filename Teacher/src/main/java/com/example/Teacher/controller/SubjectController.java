@@ -29,20 +29,16 @@ public class SubjectController {
     private sectionClassService sectionClassService;
     @Autowired
     private scheduleService scheduleService;
-    // đổ tất cả moon học
-//    @GetMapping("/subject/")
-//    public String getAllSubjectByDepartment(HttpSession session, ModelMap modelMap){
-//        Teacher teacher = (Teacher) session.getAttribute("teacher");
-//        List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
-//        modelMap.addAttribute("listSubject",subjectList);
-//        return "";
-//    }
+
     // Khi click vào 1 môn học đổ tất cả cc SectionClass ra
     @GetMapping("/subject/{id}")
     public String getAllSectionCalssBySubject(HttpSession session , @PathVariable Integer id,ModelMap modelMap){
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
         modelMap.addAttribute("listSubject",subjectList);
+
+        Subject subject = subjectService.findById(id);
+        session.setAttribute("subject",subject);
 
         List<SubjectOfSemester> subjectOfSemesters = getAllListSubjectOfSemester(id);
         List<SectionClass> sectionClassList = getAllSectionClassBySos(subjectOfSemesters);
@@ -57,10 +53,37 @@ public class SubjectController {
         };
 
 
+        modelMap.addAttribute("listSchedule",scheduleList);
+        return "register";
+    }
+
+
+    @GetMapping("/subject")
+    public String Home(HttpSession session , @PathVariable Integer id,ModelMap modelMap){
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
+        modelMap.addAttribute("listSubject",subjectList);
+
+        Subject subject = subjectService.findById(id);
+        session.setAttribute("subject",subject);
+
+        List<SubjectOfSemester> subjectOfSemesters = getAllListSubjectOfSemester(id);
+        List<SectionClass> sectionClassList = getAllSectionClassBySos(subjectOfSemesters);
+
+
+        List<Schedule> scheduleList = new ArrayList<>();
+        for(SectionClass s : sectionClassList){
+            List <Schedule> list = scheduleService.getScheduleByIdSectionClass(s.getId());
+            for(Schedule schedule : list) System.out.println(schedule.getName());
+            for (Schedule schedule : list) {scheduleList.add(schedule);
+                break;}
+        };
+
 
         modelMap.addAttribute("listSchedule",scheduleList);
         return "register";
     }
+
     @GetMapping("/review/subject")
     public String getAllTeacherAndSectionClass(HttpSession session,ModelMap modelMap){
         Teacher teacher = (Teacher) session.getAttribute("teacher");
