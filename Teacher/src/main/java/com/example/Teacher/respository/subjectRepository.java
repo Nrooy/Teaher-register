@@ -9,4 +9,5 @@ import java.util.List;
 public interface subjectRepository extends JpaRepository<Subject,Integer> {
     @Query(value = "select s from Subject s where s.department.id= :id")
     public List<Subject> getAllByInDepartment(int id);
+
 }

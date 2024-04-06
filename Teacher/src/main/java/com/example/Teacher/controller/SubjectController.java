@@ -29,34 +29,24 @@ public class SubjectController {
     private sectionClassService sectionClassService;
     @Autowired
     private scheduleService scheduleService;
-    // đổ tất cả moon học
-//    @GetMapping("/subject/")
-//    public String getAllSubjectByDepartment(HttpSession session, ModelMap modelMap){
-//        Teacher teacher = (Teacher) session.getAttribute("teacher");
-//        List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
-//        modelMap.addAttribute("listSubject",subjectList);
-//        return "";
-//    }
-    // Khi click vào 1 môn học đổ tất cả cc SectionClass ra
+
     @GetMapping("/subject/{id}")
     public String getAllSectionCalssBySubject(HttpSession session , @PathVariable Integer id,ModelMap modelMap){
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
         modelMap.addAttribute("listSubject",subjectList);
 
+        session.setAttribute("subject",subjectService.findById(id));
+
         List<SubjectOfSemester> subjectOfSemesters = getAllListSubjectOfSemester(id);
         List<SectionClass> sectionClassList = getAllSectionClassBySos(subjectOfSemesters);
-
 
         List<Schedule> scheduleList = new ArrayList<>();
         for(SectionClass s : sectionClassList){
             List <Schedule> list = scheduleService.getScheduleByIdSectionClass(s.getId());
-            for(Schedule schedule : list) System.out.println(schedule.getName());
             for (Schedule schedule : list) {scheduleList.add(schedule);
                 break;}
         };
-
-
 
         modelMap.addAttribute("listSchedule",scheduleList);
         return "register";
@@ -66,10 +56,6 @@ public class SubjectController {
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
         return "review";
-    }
-    public Schedule GetAllScheduleBySectionClass(SectionClass s){
-        List<Schedule> scheduleList = scheduleService.getScheduleByIdSectionClass(s.getId());
-        return scheduleList.get(0);
     }
     public List<SubjectOfSemester> getAllListSubjectOfSemester(int IdSubject){
         List<SubjectOfSemester> list = subjectOfSemesterService.finfAllSosByIdSubject(IdSubject);

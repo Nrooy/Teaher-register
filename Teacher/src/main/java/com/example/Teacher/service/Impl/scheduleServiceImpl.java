@@ -21,4 +21,9 @@ public class scheduleServiceImpl implements scheduleService{
     public List<Schedule> getScheduleByIdSectionClass(int idSectionClass) {
         return scheduleRespository.getScheduleByIdSectionClass(idSectionClass);
     }
+
+    @Override
+    public Schedule findById(int id) {
+        return scheduleRespository.findById(id).orElse(null);
+    }
 }

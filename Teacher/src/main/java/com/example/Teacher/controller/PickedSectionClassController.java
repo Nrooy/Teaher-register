@@ -26,20 +26,25 @@ public class PickedSectionClassController {
     sectionClassService sectionClassService;
     @Autowired
     semesterService semesterService;
+    @Autowired
+    scheduleService scheduleService;
 //    @GetMapping("/save_picked/{id}")
 //    public String savePiked(@PathVariable Integer id , HttpSession session , ModelMap modelMap){
-//        PickedSectionClass pickedSectionClass = new PickedSectionClass();
+//        Schedule schedule = scheduleService.findById(id);
+//        SectionClass sectionClass = schedule.getSectionClass();
 //
+//        PickedSectionClass pickedSectionClass = new PickedSectionClass();
 //        pickedSectionClass.setTeacher((Teacher) session.getAttribute("teacher"));
 //        pickedSectionClass.setPickedTime(Time.valueOf(LocalTime.now()));
 //        pickedSectionClass.setIsPicked(1);
-//        pickedSectionClass.setSectionClass(sectionClassService.findById(id));
+//        pickedSectionClass.setReview(0);
+//        pickedSectionClass.setSectionClass(sectionClass);
 //
 //        pickedSectionClassService.save(pickedSectionClass);
 //
 //        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(((Teacher)session.getAttribute("teacher")).getId());
 //        modelMap.addAttribute("listPicked",pickedSectionClasses);
-//        return "redirect:/home1";
+//        return "redirect:/home";
 //    }
     @GetMapping("/home1")
     public String returnHome(HttpSession session , ModelMap modelMap){

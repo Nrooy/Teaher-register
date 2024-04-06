@@ -8,4 +8,6 @@ public interface scheduleService {
     public List <Schedule> getAll();
 
     public List <Schedule> getScheduleByIdSectionClass(int idSectionClass);
+
+    public Schedule findById(int id);
 }
