@@ -93,13 +93,10 @@
         <tr th:each="schedule : ${listSchedule}">
             <td th:text="${schedule.getSectionClass().getName()}"></td>
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
-            <form>
-                <td>
-                    <!-- Thymeleaf checkbox -->
-                    <input type="checkbox" id="myCheckbox" th:value="${schedule.getId()}" onchange="submitForm()">
-
-                </td>
-            </form>
+            <td>
+                <!-- Thymeleaf checkbox -->
+                <input type="checkbox" th:id="'classCheckbox_' + ${schedule.id}" th:value="${schedule.id}">
+            </td>
         </tr>
         </tbody>
     </table>
@@ -124,14 +121,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    function submitForm() {
-        var checkbox = document.getElementById("myCheckbox");
-        if (checkbox.checked) {
-            var id = checkbox.value;
-            // Gửi yêu cầu GET đến URL tương ứng với controller
-            window.location.href = "/section-class/" + id; // Thay thế id bằng giá trị phù hợp
-        }
-    }
     $(document).ready(function() {
         // Sample data of available classes for each course
         var classesData = {

@@ -52,15 +52,8 @@ public class MemberController {
             staff = staffService.findStaff(member.getId());
             teacher = teacherService.findTeacher(staff.getIdMenber());
 
-//            List<Department> departments = departmentRepository.getAllByIdTeacher(staff.getIdMenber());
-//            System.out.println(departments.get(0).getId());
-//            List<Subject> subjectList = new ArrayList<>();
-//            for (Department d :departments){
-//                List<Subject> list = subjectService.getAll(d.getId());
-//                for (Subject s :list) subjectList.add(s);
-//            }
             List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
-            modelMap.addAttribute("listSubject",subjectList);
+            modelMap.addAttribute("listSubject",subjectList); // gui sang list cac mon hoc
 
 
             if(teacher.getPosittion()==1){

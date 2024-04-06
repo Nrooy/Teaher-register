@@ -37,4 +37,9 @@ public class pickedSectionClassServiceImpl implements pickedSectionClassService{
         return pickedSectionClassRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public List<PickedSectionClass> getAllbyTeacherID() {
+        return null;
+    }
+
 }
