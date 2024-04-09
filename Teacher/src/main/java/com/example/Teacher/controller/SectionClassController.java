@@ -46,7 +46,7 @@ public class SectionClassController {
         Member member = new Member();
         member = (Member) session.getAttribute("member");
         boolean check;
-        check = CheckDuplicate(sectionClassService.findById(id),member.getId());
+        check = false;
         if(check){
             PickedSectionClass pickedSectionClass = new PickedSectionClass();
 
@@ -65,99 +65,19 @@ public class SectionClassController {
             return "";
         }
     }
-    @GetMapping("review/section-class/{id}")
-    public String chooseReviewSectionClass(HttpSession session,@PathVariable Integer id,ModelMap modelMap){
-        PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(id);
-        Teacher teacher = pickedSectionClass.getTeacher();
-        SectionClass sectionClass = pickedSectionClass.getSectionClass();
-        if (CheckDuplicate(sectionClass,teacher.getId())){
-            return "redirect:/review/subject";
-        }
-        else {
-            modelMap.addAttribute("error","Không thể chọn lớp học phần đã bị trùng lịch dạy");
-            return "redirect:review/section-class/" + pickedSectionClass.getId();
-        }
-    }
+//    @GetMapping("review/section-class/{id}")
+//    public String chooseReviewSectionClass(HttpSession session,@PathVariable Integer id,ModelMap modelMap){
+//        PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(id);
+//        Teacher teacher = pickedSectionClass.getTeacher();
+//        SectionClass sectionClass = pickedSectionClass.getSectionClass();
+//        if (CheckDuplicate(sectionClass,teacher.getId())){
+//            return "redirect:/review/subject";
+//        }
+//        else {
+//            modelMap.addAttribute("error","Không thể chọn lớp học phần đã bị trùng lịch dạy");
+//            return "redirect:review/section-class/" + pickedSectionClass.getId();
+//        }
+//    }
 
-    public Boolean CheckDuplicate(SectionClass s , int IdTeacher){
-
-        //Lấy tất cả danh sách PickedSectionClass theo Id của giáo viên
-        List <PickedSectionClass> pickedSectionClasses =  pickedSectionClassService.getAllbyId(IdTeacher);
-
-        // Từ danh sách của PickedSectionClass sẽ xuất ra Danh sách SectionClass tương ứng
-        List <SectionClass> sectionClassList = new ArrayList<>();
-        for(PickedSectionClass p : pickedSectionClasses){
-            sectionClassList.add((SectionClass) p.getSectionClass());
-        }
-
-        // Lấy tất cả Schedule tương ứng với Danh sách SectionClass của giáo viên đăng ký
-        List<Schedule> scheduleList = new ArrayList<>();
-        for (SectionClass se : sectionClassList){
-            List<Schedule> schedules = new ArrayList<>();
-            schedules = scheduleService.getScheduleByIdSectionClass(se.getId());
-            for(Schedule sc : schedules) scheduleList.add(sc);
-        }
-
-        //Lấy Schedule của SectionClass input
-        List<Schedule> scheduleListInput = new ArrayList<>();
-        scheduleListInput = scheduleService.getScheduleByIdSectionClass(s.getId());
-
-        // Bắt đầu so sánh
-            //Week , Period , day , của Schedule Input : scheduleListInput
-                //Khai báo
-        List<Week> weekList1 = new ArrayList<>();
-        List<Period> periodList1 = new ArrayList<>();
-        List<day> dayList1 = new ArrayList<>();
-                // Lấy dữ liệu
-        for(Schedule sch : scheduleList){
-            //Lấy week
-            List<Week> demow= weekService.getAllByIdSchdule(sch.getId());
-            Week w = demow.get(0);
-            weekList1.add(w);
-            //Lấy Period
-            List<Period> demop = periodService.getAllByIdSchedule(sch.getId());
-            Period p = demop.get(0);
-            periodList1.add(p);
-            //Lấy day
-            List<day> demod = dayService.getAllByIdSchedule(sch.getId());
-            day d =demod.get(0);
-            dayList1.add(d);
-        }
-            //Week , Period , day , của Schedule
-        List<Week> weekList2 = new ArrayList<>();
-        List<Period> periodList2 = new ArrayList<>();
-        List<day> dayList2 = new ArrayList<>();
-        // Lấy dữ liệu
-        for(Schedule sch : scheduleList){
-            //Lấy week
-            List<Week> demow= weekService.getAllByIdSchdule(sch.getId());
-            Week w = demow.get(0);
-            weekList2.add(w);
-            //Lấy Period
-            List<Period> demop = periodService.getAllByIdSchedule(sch.getId());
-            Period p = demop.get(0);
-            periodList2.add(p);
-            //Lấy day
-            List<day> demod = dayService.getAllByIdSchedule(sch.getId());
-            day d =demod.get(0);
-            dayList2.add(d);
-        }
-            // So sánh
-            for (day d1 : dayList1){
-                for(day d2 : dayList2){
-                    if(d1.equals(d2)) {
-                        for (Period p1 : periodList1){
-                            for(Period p2 : periodList2){
-                                if(p1.equals(p2)) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return true;
-
-    }
 
 }
