@@ -29,34 +29,16 @@ public class SubjectController {
     private sectionClassService sectionClassService;
     @Autowired
     private scheduleService scheduleService;
-    // đổ tất cả moon học
-//    @GetMapping("/subject/")
-//    public String getAllSubjectByDepartment(HttpSession session, ModelMap modelMap){
-//        Teacher teacher = (Teacher) session.getAttribute("teacher");
-//        List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
-//        modelMap.addAttribute("listSubject",subjectList);
-//        return "";
-//    }
-    // Khi click vào 1 môn học đổ tất cả cc SectionClass ra
     @GetMapping("/subject/{id}")
     public String getAllSectionCalssBySubject(HttpSession session , @PathVariable Integer id,ModelMap modelMap){
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
         modelMap.addAttribute("listSubject",subjectList);
 
-        List<SubjectOfSemester> subjectOfSemesters = getAllListSubjectOfSemester(id);
-        List<SectionClass> sectionClassList = getAllSectionClassBySos(subjectOfSemesters);
-
-
-        List<Schedule> scheduleList = new ArrayList<>();
-        for(SectionClass s : sectionClassList){
-            List <Schedule> list = scheduleService.getScheduleByIdSectionClass(s.getId());
-            for(Schedule schedule : list) System.out.println(schedule.getName());
-            for (Schedule schedule : list) {scheduleList.add(schedule);
-                break;}
-        };
-
-
+        List<SubjectOfSemester> subjectOfSemesterList = GetAllSubjectOfSemesterBySubject(id);
+        System.out.println(subjectOfSemesterList.get(0).getId());
+        List<SectionClass> sectionClassList = GetALLSectionClassByListSoS(subjectOfSemesterList);
+        List<Schedule> scheduleList = getALlListScheduleByListSectionClass(sectionClassList);
 
         modelMap.addAttribute("listSchedule",scheduleList);
         return "register";
@@ -67,18 +49,29 @@ public class SubjectController {
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
         return "review";
     }
-    public Schedule GetAllScheduleBySectionClass(SectionClass s){
-        List<Schedule> scheduleList = scheduleService.getScheduleByIdSectionClass(s.getId());
-        return scheduleList.get(0);
+    public List<SubjectOfSemester> GetAllSubjectOfSemesterBySubject(int id){
+        List<SubjectOfSemester>subjectOfSemesterList = new ArrayList<>();
+        subjectOfSemesterList = subjectOfSemesterService.finfAllSosByIdSubject(id);
+        return  subjectOfSemesterList;
     }
-    public List<SubjectOfSemester> getAllListSubjectOfSemester(int IdSubject){
-        List<SubjectOfSemester> list = subjectOfSemesterService.finfAllSosByIdSubject(IdSubject);
-        return list;
+    public List<SectionClass> GetALLSectionClassByListSoS(List<SubjectOfSemester> subjectOfSemesterList){
+        List<SectionClass> sectionClassList = new ArrayList<>();
+        for (SubjectOfSemester s : subjectOfSemesterList){
+            List<SectionClass> list = sectionClassService.getSectionClass(s.getId());
+            for(SectionClass se : list) sectionClassList.add(se);
+        }
+        return  sectionClassList;
     }
-    public List<SectionClass> getAllSectionClassBySos(List<SubjectOfSemester> listSos){
-        SubjectOfSemester subjectOfSemester = listSos.get(0);
-        List<SectionClass> list = sectionClassService.getSectionClass(subjectOfSemester.getId());
-        return list;
+    public List<Schedule> getALlListScheduleByListSectionClass(List<SectionClass>sectionClassList){
+        List<Schedule> scheduleList = new ArrayList<>();
+        for(SectionClass s : sectionClassList){
+            List<Schedule> list = scheduleService.getScheduleByIdSectionClass(s.getId());
+            for(Schedule sc : list){
+                scheduleList.add(sc);
+                break;
+            }
+        }
+        return scheduleList;
     }
 
 }

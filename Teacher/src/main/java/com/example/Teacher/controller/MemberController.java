@@ -58,16 +58,11 @@ public class MemberController {
 
             if(teacher.getPosittion()==1){
                 List<Teacher> teacherList = new ArrayList<>();
-//                for (Department d : departments){
-//                    List<Teacher> list = teacherService.getAllTeacherByIdDepartment(d.getId());
-//                    for (Teacher t : teacherList) teacherList.add(t);
-//                }
-
                 modelMap.addAttribute("teacherList" ,teacherList);
                 return "review-home";
             }else {
-                List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
-                modelMap.addAttribute("listPicked",pickedSectionClasses);
+//                List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
+//                modelMap.addAttribute("listPicked",pickedSectionClasses);
                 session.setAttribute("teacher",teacher);
                 return "register_schedule";
             }
