@@ -95,12 +95,23 @@
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
                 <!-- Thymeleaf checkbox -->
-                <input type="checkbox" th:id="'classCheckbox_' + ${schedule.id}" th:value="${schedule.id}">
+                <input type="checkbox" id="classCheckbox" onchange="redirectToSelectedSchedule()" >
             </td>
         </tr>
         </tbody>
     </table>
+    <script>
+        function redirectToSelectedSchedule() {
+            // Lấy giá trị id của môn học được chọn
+            var selectedCheduleId = document.getElementById("classCheckbox").value;
 
+            // Kiểm tra xem giá trị đã được chọn chưa
+            if (selectedSubjectId) {
+                // Chuyển hướng đến URL mong muốn với id của môn học được chọn được thêm vào
+                window.location.href = "/schedule/" + selectedCheduleId;
+            }
+        }
+    </script>
 
     <!-- Registered classes -->
     <h3>Các lớp học phần đã đăng kí</h3>
@@ -138,7 +149,6 @@
             ]
             // Add more data as needed
         };
-
         // Function to populate available classes for the selected course
         function populateAvailableClasses(course) {
             var classes = classesData[course];

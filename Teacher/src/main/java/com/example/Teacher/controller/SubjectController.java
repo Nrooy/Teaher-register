@@ -36,7 +36,6 @@ public class SubjectController {
         modelMap.addAttribute("listSubject",subjectList);
 
         List<SubjectOfSemester> subjectOfSemesterList = GetAllSubjectOfSemesterBySubject(id);
-        System.out.println(subjectOfSemesterList.get(0).getId());
         List<SectionClass> sectionClassList = GetALLSectionClassByListSoS(subjectOfSemesterList);
         List<Schedule> scheduleList = getALlListScheduleByListSectionClass(sectionClassList);
 
