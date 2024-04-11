@@ -64,6 +64,7 @@ public class MemberController {
                 List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
                 modelMap.addAttribute("listPicked",pickedSectionClasses);
                 session.setAttribute("teacher",teacher);
+                System.out.println(pickedSectionClasses.size());
                 return "register_schedule";
             }
         }else {

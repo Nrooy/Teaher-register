@@ -15,6 +15,8 @@ import com.example.Teacher.entities.*;
 import com.example.Teacher.service.*;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +44,16 @@ public class ScheduleController {
         Subject subject = (Subject) session.getAttribute("subject");
         session.removeAttribute("subject");
         Boolean check = CheckDuplicateSchedule(str,stringList);
-        System.out.println(check);
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
         modelMap.addAttribute("listPicked",pickedSectionClasses);
-        return "redirect:/subject/"+subject.getId();
 
+
+        if(check == true ){
+            savePickedSectionClassByIdSchedule(schedule,teacher);
+        }else {
+            modelMap.addAttribute("error" , "Lớp học phần được chọn đã bị trùng !");
+        }
+        return "redirect:/subject/"+subject.getId();
     }
     public boolean CheckDuplicateSchedule(String str , List<String>list){
         for(String s : list){
@@ -92,7 +99,17 @@ public class ScheduleController {
         return scheduleList;
     }
 
-//    public Boolean savePickedSectionClass(Schedule)
+    public void savePickedSectionClassByIdSchedule(Schedule schedule,Teacher teacher){
+
+        SectionClass sectionClass = schedule.getSectionClass();
+        PickedSectionClass pickedSectionClass = new PickedSectionClass();
+        pickedSectionClass.setTeacher(teacher);
+        pickedSectionClass.setPickedTime(Time.valueOf(LocalTime.now()));
+        pickedSectionClass.setIsPicked(1);
+        pickedSectionClass.setReview(0);
+        pickedSectionClass.setSectionClass(sectionClass);
+        pickedSectionClassService.save(pickedSectionClass);
+    }
 
 
 
