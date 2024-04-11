@@ -64,21 +64,6 @@
 
 
 
-    <!-- Available classes -->
-    <!--    <h3>Các lớp học phần có thể đăng kí</h3>-->
-    <!--    <table class="table" id="availableClassesTable" >-->
-    <!--        <thead>-->
-    <!--        <tr>-->
-    <!--            <th>Tên lớp học phần</th>-->
-    <!--            <th>Thời gian</th>-->
-    <!--            <th>Chọn</th>-->
-    <!--        </tr>-->
-    <!--        </thead>-->
-    <!--        <tbody id="availableClassesBody">-->
-    <!--        &lt;!&ndash; This section will be populated with available classes using JavaScript &ndash;&gt;-->
-    <!--        </tbody>-->
-    <!--    </table>-->
-
     <h3>Các lớp học phần có thể đăng kí</h3>
     <table class="table" id="availableClassesTable">
         <thead>
@@ -94,24 +79,14 @@
             <td th:text="${schedule.getSectionClass().getName()}"></td>
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
-                <!-- Thymeleaf checkbox -->
-                <input type="checkbox" id="classCheckbox" onchange="redirectToSelectedSchedule()" >
+                <form th:action="@{'/schedule/'+schedule.getId()}" method="post">
+                    <button type="submit">Your Button</button>
+                </form>
             </td>
         </tr>
         </tbody>
     </table>
-    <script>
-        function redirectToSelectedSchedule() {
-            // Lấy giá trị id của môn học được chọn
-            var selectedCheduleId = document.getElementById("classCheckbox").value;
 
-            // Kiểm tra xem giá trị đã được chọn chưa
-            if (selectedSubjectId) {
-                // Chuyển hướng đến URL mong muốn với id của môn học được chọn được thêm vào
-                window.location.href = "/schedule/" + selectedCheduleId;
-            }
-        }
-    </script>
 
     <!-- Registered classes -->
     <h3>Các lớp học phần đã đăng kí</h3>
@@ -127,11 +102,17 @@
         </tbody>
     </table>
 </div>
-
+<script>
+    function redirectToSchedule(scheduleId) {
+        alert("ID của schedule: " + scheduleId);
+        // Rest of your code
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+
     $(document).ready(function() {
         // Sample data of available classes for each course
         var classesData = {

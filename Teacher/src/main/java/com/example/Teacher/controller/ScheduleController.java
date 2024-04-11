@@ -1,6 +1,7 @@
 package com.example.Teacher.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.PushBuilder;
 import jakarta.websocket.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,15 +37,18 @@ public class ScheduleController {
         List<String> stringList = ConvertListScheduleToString(teacher.getId());
 
         Schedule schedule = scheduleService.findById(id);
-        String str = "" + schedule.getDay().getName() +schedule.getPeriod().getName();
+        String str = schedule.getDay().getName() +schedule.getPeriod().getName();
 
+        Subject subject = (Subject) session.getAttribute("subject");
+        session.removeAttribute("subject");
         Boolean check = CheckDuplicateSchedule(str,stringList);
         System.out.println(check);
-        return "redirect:/subject/";
+
+        return "redirect:/subject/"+subject.getId();
     }
     public boolean CheckDuplicateSchedule(String str , List<String>list){
         for(String s : list){
-            if(str.equals(list)) return false;
+            if(str.equals(s)) return false;
         }
         return  true;
     }
@@ -73,6 +77,7 @@ public class ScheduleController {
         }
         return sectionClassList;
     }
+
     public List<Schedule> getALlListScheduleByListSectionClass(List<SectionClass>sectionClassList){
         List<Schedule> scheduleList = new ArrayList<>();
         for(SectionClass s : sectionClassList){
@@ -85,6 +90,7 @@ public class ScheduleController {
         return scheduleList;
     }
 
+//    public Boolean savePickedSectionClass(Schedule)
 
 
 

@@ -39,6 +39,7 @@ public class SubjectController {
         List<SectionClass> sectionClassList = GetALLSectionClassByListSoS(subjectOfSemesterList);
         List<Schedule> scheduleList = getALlListScheduleByListSectionClass(sectionClassList);
 
+        session.setAttribute("subject",subjectService.findById(id));
         modelMap.addAttribute("listSchedule",scheduleList);
         return "register";
     }
