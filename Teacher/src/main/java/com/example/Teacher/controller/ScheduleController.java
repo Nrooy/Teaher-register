@@ -43,8 +43,10 @@ public class ScheduleController {
         session.removeAttribute("subject");
         Boolean check = CheckDuplicateSchedule(str,stringList);
         System.out.println(check);
-
+        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
+        modelMap.addAttribute("listPicked",pickedSectionClasses);
         return "redirect:/subject/"+subject.getId();
+
     }
     public boolean CheckDuplicateSchedule(String str , List<String>list){
         for(String s : list){

@@ -61,8 +61,8 @@ public class MemberController {
                 modelMap.addAttribute("teacherList" ,teacherList);
                 return "review-home";
             }else {
-//                List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
-//                modelMap.addAttribute("listPicked",pickedSectionClasses);
+                List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
+                modelMap.addAttribute("listPicked",pickedSectionClasses);
                 session.setAttribute("teacher",teacher);
                 return "register_schedule";
             }
