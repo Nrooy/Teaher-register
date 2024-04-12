@@ -28,24 +28,6 @@ public class PickedSectionClassController {
     semesterService semesterService;
     @Autowired
     scheduleService scheduleService;
-//    @GetMapping("/save_picked/{id}")
-//    public String savePiked(@PathVariable Integer id , HttpSession session , ModelMap modelMap){
-//        Schedule schedule = scheduleService.findById(id);
-//        SectionClass sectionClass = schedule.getSectionClass();
-//
-//        PickedSectionClass pickedSectionClass = new PickedSectionClass();
-//        pickedSectionClass.setTeacher((Teacher) session.getAttribute("teacher"));
-//        pickedSectionClass.setPickedTime(Time.valueOf(LocalTime.now()));
-//        pickedSectionClass.setIsPicked(1);
-//        pickedSectionClass.setReview(0);
-//        pickedSectionClass.setSectionClass(sectionClass);
-//
-//        pickedSectionClassService.save(pickedSectionClass);
-//
-//        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(((Teacher)session.getAttribute("teacher")).getId());
-//        modelMap.addAttribute("listPicked",pickedSectionClasses);
-//        return "redirect:/home";
-//    }
     @GetMapping("/home1")
     public String returnHome(HttpSession session , ModelMap modelMap){
         List<Semester> semesters = semesterService.getAllSemester();
@@ -62,7 +44,7 @@ public class PickedSectionClassController {
     @GetMapping("delete/{id}")
     public String deletePicked(@PathVariable Integer id){
         pickedSectionClassService.deleteById(id);
-        return "redirect:/home1";
+        return "register_schedule";
     }
 
     public int total(List<Subject> subjectList){
