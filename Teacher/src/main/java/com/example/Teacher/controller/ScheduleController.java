@@ -40,7 +40,7 @@ public class ScheduleController {
 
         Boolean check = CheckDuplicateSchedule(str,stringList);
         System.out.println(check);
-        return "redirect:/subject/";
+        return "redirect:/subject/" + String.valueOf(id);
     }
     public boolean CheckDuplicateSchedule(String str , List<String>list){
         for(String s : list){

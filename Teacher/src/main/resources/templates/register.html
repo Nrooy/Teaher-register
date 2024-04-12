@@ -14,18 +14,6 @@
     <br>
     <h2>Đăng kí môn học</h2>
 
-    <!-- Dropdown list of courses -->
-    <!--    <div class="form-group">-->
-    <!--        <label for="coursesDropdown">Chọn môn học:</label>-->
-    <!--        <select class="form-control" id="coursesDropdown">-->
-    <!--            <option value="">Chọn một môn học</option>-->
-    <!--            &lt;!&ndash; Sử dụng Thymeleaf để lặp qua danh sách các môn học và hiển thị chúng &ndash;&gt;-->
-    <!--            <th:block th:each="subject : ${listSubject}">-->
-    <!--                <option th:value="${subject.id}" th:text="${subject.name}"></option>-->
-    <!--            </th:block>-->
-    <!--        </select>-->
-    <!--    </div>-->
-
     <div class="form-group">
         <label for="coursesDropdown">Chọn môn học:</label>
         <select class="form-control" id="coursesDropdown" onchange="redirectToSelectedSubject()">
@@ -62,23 +50,6 @@
         }
     </script>
 
-
-
-    <!-- Available classes -->
-    <!--    <h3>Các lớp học phần có thể đăng kí</h3>-->
-    <!--    <table class="table" id="availableClassesTable" >-->
-    <!--        <thead>-->
-    <!--        <tr>-->
-    <!--            <th>Tên lớp học phần</th>-->
-    <!--            <th>Thời gian</th>-->
-    <!--            <th>Chọn</th>-->
-    <!--        </tr>-->
-    <!--        </thead>-->
-    <!--        <tbody id="availableClassesBody">-->
-    <!--        &lt;!&ndash; This section will be populated with available classes using JavaScript &ndash;&gt;-->
-    <!--        </tbody>-->
-    <!--    </table>-->
-
     <h3>Các lớp học phần có thể đăng kí</h3>
     <table class="table" id="availableClassesTable">
         <thead>
@@ -95,23 +66,25 @@
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
                 <!-- Thymeleaf checkbox -->
-                <input type="checkbox" id="classCheckbox" onchange="redirectToSelectedSchedule()" >
+                <input type="checkbox" class="classCheckbox" onchange="redirectToSelectedSchedule(this)" th:data-schedule-id="${schedule.getId()}">
             </td>
         </tr>
         </tbody>
     </table>
     <script>
-        function redirectToSelectedSchedule() {
+        function redirectToSelectedSchedule(checkbox) {
             // Lấy giá trị id của môn học được chọn
-            var selectedCheduleId = document.getElementById("classCheckbox").value;
+            var selectedScheduleId = checkbox.dataset.scheduleId;
 
             // Kiểm tra xem giá trị đã được chọn chưa
-            if (selectedSubjectId) {
+            if (selectedScheduleId) {
                 // Chuyển hướng đến URL mong muốn với id của môn học được chọn được thêm vào
-                window.location.href = "/schedule/" + selectedCheduleId;
+                window.location.href = "/schedule/" + selectedScheduleId;
             }
         }
     </script>
+
+
 
     <!-- Registered classes -->
     <h3>Các lớp học phần đã đăng kí</h3>
