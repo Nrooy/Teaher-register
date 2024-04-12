@@ -65,19 +65,7 @@ public class SectionClassController {
             return "";
         }
     }
-//    @GetMapping("review/section-class/{id}")
-//    public String chooseReviewSectionClass(HttpSession session,@PathVariable Integer id,ModelMap modelMap){
-//        PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(id);
-//        Teacher teacher = pickedSectionClass.getTeacher();
-//        SectionClass sectionClass = pickedSectionClass.getSectionClass();
-//        if (CheckDuplicate(sectionClass,teacher.getId())){
-//            return "redirect:/review/subject";
-//        }
-//        else {
-//            modelMap.addAttribute("error","Không thể chọn lớp học phần đã bị trùng lịch dạy");
-//            return "redirect:review/section-class/" + pickedSectionClass.getId();
-//        }
-//    }
+
 
 
 }

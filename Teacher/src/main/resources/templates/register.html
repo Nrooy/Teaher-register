@@ -50,6 +50,7 @@
         }
     </script>
 
+
     <h3>Các lớp học phần có thể đăng kí</h3>
     <table class="table" id="availableClassesTable">
         <thead>
@@ -66,7 +67,8 @@
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
                 <!-- Thymeleaf checkbox -->
-                <input type="checkbox" class="classCheckbox" onchange="redirectToSelectedSchedule(this)" th:data-schedule-id="${schedule.getId()}">
+                <input type="checkbox" class="classCheckbox" onchange="redirectToSelectedSchedule(this)">
+                <input type="hidden" class="scheduleId" th:value="${schedule.getId()}">
             </td>
         </tr>
         </tbody>
@@ -74,7 +76,7 @@
     <script>
         function redirectToSelectedSchedule(checkbox) {
             // Lấy giá trị id của môn học được chọn
-            var selectedScheduleId = checkbox.dataset.scheduleId;
+            var selectedScheduleId = checkbox.parentElement.querySelector('.scheduleId').value;
 
             // Kiểm tra xem giá trị đã được chọn chưa
             if (selectedScheduleId) {
@@ -100,11 +102,17 @@
         </tbody>
     </table>
 </div>
-
+<script>
+    function redirectToSchedule(scheduleId) {
+        alert("ID của schedule: " + scheduleId);
+        // Rest of your code
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
+
     $(document).ready(function() {
         // Sample data of available classes for each course
         var classesData = {
