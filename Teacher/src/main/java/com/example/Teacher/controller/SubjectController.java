@@ -31,16 +31,26 @@ public class SubjectController {
     private scheduleService scheduleService;
     @GetMapping("/subject/{id}")
     public String getAllSectionCalssBySubject(HttpSession session , @PathVariable Integer id,ModelMap modelMap){
+        Member member = (Member) session.getAttribute("member");
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
         modelMap.addAttribute("listSubject",subjectList);
 
         List<SubjectOfSemester> subjectOfSemesterList = GetAllSubjectOfSemesterBySubject(id);
+
         List<SectionClass> sectionClassList = GetALLSectionClassByListSoS(subjectOfSemesterList);
+
         List<Schedule> scheduleList = getALlListScheduleByListSectionClass(sectionClassList);
 
         session.setAttribute("subject",subjectService.findById(id));
         modelMap.addAttribute("listSchedule",scheduleList);
+
+        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
+
+
+        modelMap.addAttribute("listPicked",pickedSectionClasses);
+
+
         return "register";
     }
     @GetMapping("/review/subject")

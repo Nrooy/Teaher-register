@@ -52,6 +52,8 @@ public class MemberController {
             staff = staffService.findStaff(member.getId());
             teacher = teacherService.findTeacher(staff.getIdMenber());
 
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>" + teacher.getDepartment().getId());
+
             List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
             modelMap.addAttribute("listSubject",subjectList); // gui sang list cac mon hoc
 
@@ -64,7 +66,6 @@ public class MemberController {
                 List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
                 modelMap.addAttribute("listPicked",pickedSectionClasses);
                 session.setAttribute("teacher",teacher);
-                System.out.println(pickedSectionClasses.size());
                 return "register_schedule";
             }
         }else {

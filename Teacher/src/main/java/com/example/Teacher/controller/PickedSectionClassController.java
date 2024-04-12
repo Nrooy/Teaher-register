@@ -28,17 +28,35 @@ public class PickedSectionClassController {
     semesterService semesterService;
     @Autowired
     scheduleService scheduleService;
+
+
+    @Autowired
+    private teacherService teacherService;
+    @Autowired
+    private staffService staffService;
+
+    @Autowired
+    private subjectService subjectService;
+
+
     @GetMapping("/home1")
     public String returnHome(HttpSession session , ModelMap modelMap){
-        List<Semester> semesters = semesterService.getAllSemester();
-        modelMap.addAttribute("listSemester",semesters);
-        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(((Teacher)session.getAttribute("teacher")).getId());
-        modelMap.addAttribute("listPicked",pickedSectionClasses);
 
-        List <Subject> subjectList = getListSubject(pickedSectionClasses);
-        int total = total(subjectList);
-        modelMap.addAttribute("total",total);
-        return "home";
+        Member member = (Member) session.getAttribute("member");
+
+        Teacher teacher = new Teacher();
+        Staff staff = new Staff();
+        staff = staffService.findStaff(member.getId());
+        teacher = teacherService.findTeacher(staff.getIdMenber());
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>" + teacher.getDepartment().getId());
+
+        List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
+        modelMap.addAttribute("listSubject",subjectList); // gui sang list cac mon hoc
+        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
+        modelMap.addAttribute("listPicked",pickedSectionClasses);
+        session.setAttribute("teacher",teacher);
+        return "register_schedule";
     }
 
     @GetMapping("delete/{id}")
