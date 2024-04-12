@@ -46,7 +46,7 @@ public class ScheduleController {
         Boolean check = CheckDuplicateSchedule(str,stringList);
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
         modelMap.addAttribute("listPicked",pickedSectionClasses);
-
+        System.out.println("////////////////////////" + check);
 
         if(check == true ){
             savePickedSectionClassByIdSchedule(schedule,teacher);
