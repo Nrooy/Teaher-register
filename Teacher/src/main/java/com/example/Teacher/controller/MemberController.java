@@ -61,7 +61,7 @@ public class MemberController {
             if(teacher.getPosittion()==1){
                 List<Teacher> teacherList = new ArrayList<>();
                 modelMap.addAttribute("teacherList" ,teacherList);
-                return "review-home";
+                return "approve_schedule";
             }else {
                 List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
                 modelMap.addAttribute("listPicked",pickedSectionClasses);
@@ -73,4 +73,5 @@ public class MemberController {
             return "login-form";
         }
     }
+
 }
