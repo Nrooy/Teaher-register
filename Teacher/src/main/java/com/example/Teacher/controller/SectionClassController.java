@@ -41,30 +41,7 @@ public class SectionClassController {
         modelMap.addAttribute("listSectionClass",sectionClasses);
         return "section-class";
     }
-    @GetMapping("/section-class/{id}")
-    public String chooseSectionClass(HttpSession session ,@PathVariable Integer id , ModelMap modelMap){
-        Member member = new Member();
-        member = (Member) session.getAttribute("member");
-        boolean check;
-        check = false;
-        if(check){
-            PickedSectionClass pickedSectionClass = new PickedSectionClass();
 
-            pickedSectionClass.setTeacher((Teacher) session.getAttribute("teacher"));
-            pickedSectionClass.setPickedTime(Time.valueOf(LocalTime.now()));
-            pickedSectionClass.setIsPicked(1);
-            pickedSectionClass.setSectionClass(sectionClassService.findById(id));
-
-            pickedSectionClassService.save(pickedSectionClass);
-
-            List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(((Teacher)session.getAttribute("teacher")).getId());
-            modelMap.addAttribute("listPicked",pickedSectionClasses);
-            return "";
-        }else{
-            modelMap.addAttribute("error","Lớp học phần đã bị trùng lịch");
-            return "";
-        }
-    }
 
 
 

@@ -39,7 +39,4 @@ public class PickedSectionClass {
     private SectionClass sectionClass;
 
 
-//    @ManyToOne
-//    @JoinColumn(name = "sectionclass_id")
-//    private SectionClass sectionClass;
 }

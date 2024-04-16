@@ -6,14 +6,11 @@ import jakarta.websocket.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.Teacher.respository.*;
 import com.example.Teacher.entities.*;
 import com.example.Teacher.service.*;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -32,73 +29,108 @@ public class ScheduleController {
     private sectionClassService sectionClassService;
     @Autowired
     private teacherService teacherService;
+
     @GetMapping("/schedule/{id}")
-    public String getAllScheduleByIdSos(@PathVariable Integer id, HttpSession session, ModelMap modelMap){
+    public String getAllScheduleByIdSos(@PathVariable Integer id, HttpSession session, ModelMap modelMap) {
         Member member = (Member) session.getAttribute("member");
         Teacher teacher = teacherService.findTeacher(member.getId());
         List<String> stringList = ConvertListScheduleToString(teacher.getId());
 
         Schedule schedule = scheduleService.findById(id);
-        String str = schedule.getDay().getName() +schedule.getPeriod().getName();
+        String str = schedule.getDay().getName() + schedule.getPeriod().getName();
 
         Subject subject = (Subject) session.getAttribute("subject");
         session.removeAttribute("subject");
-        Boolean check = CheckDuplicateSchedule(str,stringList);
+        Boolean check = CheckDuplicateSchedule(str, stringList);
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
-        modelMap.addAttribute("listPicked",pickedSectionClasses);
+        modelMap.addAttribute("listPicked", pickedSectionClasses);
 
-        if(check == true ){
-            savePickedSectionClassByIdSchedule(schedule,teacher);
-        }else {
-            modelMap.addAttribute("error" , "Lớp học phần được chọn đã bị trùng !");
+        if (check == true) {
+            savePickedSectionClassByIdSchedule(schedule, teacher);
+        } else {
+            modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
         }
-        return "redirect:/subject/"+subject.getId();
+        return "redirect:/subject/" + subject.getId();
     }
-    public boolean CheckDuplicateSchedule(String str , List<String>list){
-        for(String s : list){
-            if(str.equals(s)) return false;
+
+    @PostMapping("review/check/{idSectionClass}")
+    public String CheckDuplicatereview(@PathVariable Integer idSectionClass, @PathVariable Integer IdTeacher, ModelMap modelMap , HttpSession session) {
+        Teacher teacher = teacherService.findTeacher(IdTeacher);
+        List<String> stringList = ConvertListScheduleToString(IdTeacher);
+
+        Schedule schedule = getScheduleByIdSectionClass(idSectionClass);
+        String str = schedule.getDay().getName() + schedule.getPeriod().getName();
+
+        Boolean check = CheckDuplicateSchedule(str,stringList);
+        if (check == true) {
+            schedule.setTeacher(teacher);
+            savePickedSectionClassByIdSchedule(schedule, teacher);
+        } else {
+            modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
         }
-        return  true;
+        return "redirect:/review/subject/"+(int) session.getAttribute("idSubject");
+
     }
-    public List<String> ConvertListScheduleToString(int idTeacher){
+
+    public boolean CheckDuplicateSchedule(String str, List<String> list) {
+        for (String s : list) {
+            if (str.equals(s)) return false;
+        }
+        return true;
+    }
+
+    public List<String> ConvertListScheduleToString(int idTeacher) {
         List<PickedSectionClass> pickedSectionClassList = GetListPickedSectionClassByIdTeacher(idTeacher);
         List<SectionClass> sectionClassList = getListSectionClassByListPickedSectionClass(pickedSectionClassList);
         List<Schedule> scheduleList = getALlListScheduleByListSectionClass(sectionClassList);
 
-        List <String> list = new ArrayList<>();
-        for (Schedule s : scheduleList){
+        List<String> list = new ArrayList<>();
+        for (Schedule s : scheduleList) {
             String str = "";
-            str= str+ s.getDay().getName() + s.getPeriod().getName();
+            str = str + s.getDay().getName() + s.getPeriod().getName();
             list.add(str);
         }
-        return  list;
+        return list;
     }
-    public List<PickedSectionClass> GetListPickedSectionClassByIdTeacher(int idTeacher){
+
+    public List<PickedSectionClass> GetListPickedSectionClassByIdTeacher(int idTeacher) {
         List<PickedSectionClass> list = pickedSectionClassService.getAllbyId(idTeacher);
         return list;
     }
-    public List<SectionClass> getListSectionClassByListPickedSectionClass(List<PickedSectionClass>list){
+
+    public List<SectionClass> getListSectionClassByListPickedSectionClass(List<PickedSectionClass> list) {
         List<SectionClass> sectionClassList = new ArrayList<>();
-        for(PickedSectionClass p : list){
+        for (PickedSectionClass p : list) {
             SectionClass s = p.getSectionClass();
             sectionClassList.add(s);
         }
         return sectionClassList;
     }
 
-    public List<Schedule> getALlListScheduleByListSectionClass(List<SectionClass>sectionClassList){
+    public List<Schedule> getALlListScheduleByListSectionClass(List<SectionClass> sectionClassList) {
         List<Schedule> scheduleList = new ArrayList<>();
-        for(SectionClass s : sectionClassList){
+        for (SectionClass s : sectionClassList) {
             List<Schedule> list = scheduleService.getScheduleByIdSectionClass(s.getId());
-            for(Schedule sc : list){
+            for (Schedule sc : list) {
                 scheduleList.add(sc);
                 break;
             }
         }
         return scheduleList;
     }
+    public Schedule getScheduleByIdSectionClass(int IdSectionClass) {
+        List<Schedule> scheduleList = scheduleService.getScheduleByIdSectionClass(IdSectionClass);
 
-    public void savePickedSectionClassByIdSchedule(Schedule schedule,Teacher teacher){
+        Schedule schedule = new Schedule();
+        for (Schedule s : scheduleList) {
+            schedule = s ;
+            break;
+        }
+
+        return schedule;
+    }
+
+    public void savePickedSectionClassByIdSchedule(Schedule schedule, Teacher teacher) {
 
         SectionClass sectionClass = schedule.getSectionClass();
         PickedSectionClass pickedSectionClass = new PickedSectionClass();
