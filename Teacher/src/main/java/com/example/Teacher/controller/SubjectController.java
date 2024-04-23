@@ -47,7 +47,11 @@ public class SubjectController {
 
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
 
-
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            modelMap.addAttribute("error", error);
+            session.removeAttribute("error");
+        }
         modelMap.addAttribute("listPicked",pickedSectionClasses);
 
 
