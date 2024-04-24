@@ -84,18 +84,6 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/test")
-    public String test() {
-        int idTeacher = 7;
-        Teacher teacher = teacherService.findTeacher(idTeacher);
-        Department department = teacher.getDepartment();
-        List<Teacher> teacherList = department.getTeachers();
-        for (Teacher t : teacherList) {
-            System.out.println(t.getId());
-        }
-        return "";
-    }
-
 
     @GetMapping("/home2")
     public String redirect(HttpSession session) {
