@@ -58,11 +58,18 @@ public class SubjectController {
         return "register";
     }
     @GetMapping("/review/subject/{id}")
-    public String getAllTeacherAndSectionClass(HttpSession session,ModelMap modelMap,@PathVariable int id){
-        List<SubjectOfSemester> subjectOfSemesters = GetAllSubjectOfSemesterBySubject(id);
-        List<SectionClass> sectionClassList = GetALLSectionClassByListSoS(subjectOfSemesters);
-        session.setAttribute("idSubject",id);
-        modelMap.addAttribute("sectionClassList",sectionClassList);
+    public String getAllTeacherAndSectionClass(HttpSession session,ModelMap modelMap , @PathVariable Integer id){
+
+
+        List<PickedSectionClass> pickedSectionClasses = new ArrayList<>();
+        List<SubjectOfSemester> subjectOfSemesterList = subjectService.findById(id).getSubjectOfSemester();
+        for(SubjectOfSemester s : subjectOfSemesterList){
+            List<SectionClass> list = s.getSectionClasses();
+            for(SectionClass se : list){
+                pickedSectionClasses.add(se.getPickedSectionClass());
+            }
+        }
+        modelMap.addAttribute("listPicked",pickedSectionClasses);
         return "review";
     }
     public List<SubjectOfSemester> GetAllSubjectOfSemesterBySubject(int id){

@@ -54,12 +54,13 @@ public class MemberController {
 
 
             List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
-            modelMap.addAttribute("listSubject",subjectList); // gui sang list cac mon hoc
+            modelMap.addAttribute("listSubject",subjectList);
 
 
             if(teacher.getPosittion()==1){
-                List<Teacher> teacherList = new ArrayList<>();
-                modelMap.addAttribute("teacherList" ,teacherList);
+                Department department = teacher.getDepartment();
+                modelMap.addAttribute("teacherList" ,department.getTeachers());
+                session.setAttribute("listSubject",subjectList);
                 List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
                 modelMap.addAttribute("listPicked",pickedSectionClasses);
                 return "approve_schedule";
@@ -73,6 +74,17 @@ public class MemberController {
             modelMap.addAttribute("error","Tai khoan mat khau khong chinh xac");
             return "login-form";
         }
+    }
+    @GetMapping("/test")
+    public String test(){
+        int idTeacher = 7;
+        Teacher teacher = teacherService.findTeacher(idTeacher);
+        Department department = teacher.getDepartment();
+        List <Teacher> teacherList = department.getTeachers();
+        for(Teacher t : teacherList){
+            System.out.println(t.getId());
+        }
+        return "";
     }
 
 }
