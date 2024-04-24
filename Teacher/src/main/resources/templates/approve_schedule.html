@@ -10,6 +10,7 @@
       font-weight: bold;
     }
   </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 
@@ -19,29 +20,90 @@
   <!-- Dropdown list of courses -->
   <div class="form-group">
     <label for="coursesDropdown">Chọn môn học:</label>
-    <select class="form-control" id="coursesDropdown" onchange="loadClasses()">
-      <option value="course1">Môn học 1</option>
-      <option value="course2">Môn học 2</option>
-      <option value="course3">Môn học 3</option>
-      <!-- Add more options as needed -->
+    <select class="form-control" id="coursesDropdown" onchange="redirectToSelectedSubject()">
+      <option value="">Chọn một môn học</option>
+      <!-- Sử dụng Thymeleaf để lặp qua danh sách các môn học và hiển thị chúng -->
+      <th:block th:each="subject : ${listSubject}">
+        <option th:value="${subject.id}" th:text="${subject.name}"></option>
+      </th:block>
     </select>
   </div>
 
-  <!-- Table for class schedule approval -->
+
+  <script>
+    // Hàm này được gọi khi trang được load lại
+    window.onload = function() {
+      // Lấy id của môn học từ đường dẫn URL
+      var selectedSubjectId = window.location.pathname.split('/').pop();
+
+      // Kiểm tra xem selectedSubjectId có giá trị không rỗng
+      if (selectedSubjectId) {
+        // Đặt giá trị của dropdown thành id của môn học được chọn trước đó
+        document.getElementById("coursesDropdown").value = selectedSubjectId;
+      }
+    };
+
+    function redirectToSelectedSubject() {
+      // Lấy giá trị id của môn học được chọn
+      var selectedSubjectId = document.getElementById("coursesDropdown").value;
+
+      // Kiểm tra xem giá trị đã được chọn chưa
+      if (selectedSubjectId) {
+        // Chuyển hướng đến URL mong muốn với id của môn học được chọn được thêm vào
+        window.location.href = "/review/subject/" + selectedSubjectId;
+      }
+    }
+  </script>
+
+
+  <h1 th:text="${error}" style="color: red"></h1>
   <table class="table">
     <thead>
     <tr>
-      <th>STT</th>
+      <th>Nhóm</th>
       <th>Tên lớp học phần</th>
       <th>Thời gian</th>
-      <th>Giảng viên có thể dạy</th>
-      <th>Phê duyệt</th>
+      <th>Giảng viên</th>
+      <th>Action</th>
     </tr>
     </thead>
-    <tbody id="classSchedule">
-    <!-- This section will be populated with class schedule based on selected course -->
+    <tbody id="registeredClasses">
+    <!-- Thymeleaf iteration to populate table rows -->
+    <tr th:each="picked : ${listPicked}">
+      <td th:text="${picked.getId()}"></td>
+      <td th:text="${picked.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
+      <td th:text="${picked.pickedTime}"></td>
+      <td>
+<!--        <select th:id="'teacher-select-' + ${picked.id}" class="teacher-select form-control">-->
+<!--          &lt;!&ndash; Thymeleaf iteration to populate dropdown options &ndash;&gt;-->
+<!--          <option th:each="teacher : ${teacherList}" th:value="${teacher.getId()}" th:text="${teacher.getStaff().getMember().getName()}"></option>-->
+<!--        </select>-->
+        <select th:id="'teacher-select-' + ${picked.id}" class="teacher-select form-control">
+          <!-- Thymeleaf iteration to populate dropdown options -->
+          <option th:each="teacher : ${teacherList}"
+                  th:value="${teacher.getId()}"
+                  th:text="${teacher.getStaff().getMember().getName()}"
+                  th:selected="${picked.teacher != null and picked.teacher.id == teacher.id}"></option>
+        </select>
+      </td>
+      <td>
+        <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
+                th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu
+        </button>
+      </td>
+    </tr>
     </tbody>
   </table>
+  <script th:inline="javascript">
+    $(document).ready(function() {
+      $('.delete-btn').click(function() {
+        var pickedId = $(this).data('pickedid');
+        var teacherId = $('#' + $(this).data('teacherid')).val();
+        var url = '/review/save-picked?idpicked=' + pickedId + '&idteacher=' + teacherId;
+        window.location.href = url;
+      });
+    });
+  </script>
 
   <!-- Button to save approval -->
   <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>

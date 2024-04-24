@@ -42,4 +42,9 @@ public class pickedSectionClassServiceImpl implements pickedSectionClassService{
         return null;
     }
 
+    @Override
+    public PickedSectionClass GetPickByIdSectionClass(int id) {
+        return pickedSectionClassRepository.getPBySection(id);
+    }
+
 }

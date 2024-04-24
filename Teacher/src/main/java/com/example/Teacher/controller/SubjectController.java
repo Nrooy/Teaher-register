@@ -58,20 +58,30 @@ public class SubjectController {
         return "register";
     }
     @GetMapping("/review/subject/{id}")
-    public String getAllTeacherAndSectionClass(HttpSession session,ModelMap modelMap , @PathVariable Integer id){
-
+    public String getAllTeacherAndSectionClass(HttpSession session,ModelMap modelMap, @PathVariable Integer id){
 
         List<PickedSectionClass> pickedSectionClasses = new ArrayList<>();
-        List<SubjectOfSemester> subjectOfSemesterList = subjectService.findById(id).getSubjectOfSemester();
-        for(SubjectOfSemester s : subjectOfSemesterList){
-            List<SectionClass> list = s.getSectionClasses();
-            for(SectionClass se : list){
-                pickedSectionClasses.add(se.getPickedSectionClass());
+        session.setAttribute("subjectReview" ,subjectService.findById(id));
+        List<PickedSectionClass> list = (List<PickedSectionClass>) session.getAttribute("listPicked");
+        System.out.println(list.size());
+        for(PickedSectionClass p : list){
+            if(p.getSectionClass().getSubjectOfSemester().getSubject().getId() == id){
+                pickedSectionClasses.add(p);
             }
         }
+
+        List<Subject> subjectList = (List<Subject>) session.getAttribute("listSubject");
+//        session.removeAttribute("listSubject");
+
+        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
+//        session.removeAttribute("teacherList");
+
         modelMap.addAttribute("listPicked",pickedSectionClasses);
+        modelMap.addAttribute("listSubject",subjectList);
+        modelMap.addAttribute("teacherList",teacherList);
         return "review";
     }
+
     public List<SubjectOfSemester> GetAllSubjectOfSemesterBySubject(int id){
         List<SubjectOfSemester>subjectOfSemesterList = new ArrayList<>();
         subjectOfSemesterList = subjectOfSemesterService.finfAllSosByIdSubject(id);

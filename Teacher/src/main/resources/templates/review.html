@@ -2,9 +2,200 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phê duyệt lịch đăng kí</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bold {
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
+
+<div class="container mt-5">
+    <h2>Phê duyệt lịch đăng kí</h2>
+
+    <!-- Dropdown list of courses -->
+    <div class="form-group">
+        <label for="coursesDropdown">Chọn môn học:</label>
+        <select class="form-control" id="coursesDropdown" onchange="redirectToSelectedSubject()">
+            <option value="">Chọn một môn học</option>
+            <!-- Sử dụng Thymeleaf để lặp qua danh sách các môn học và hiển thị chúng -->
+            <th:block th:each="subject : ${listSubject}">
+                <option th:value="${subject.id}" th:text="${subject.name}"></option>
+            </th:block>
+        </select>
+    </div>
+
+
+    <script>
+        // Hàm này được gọi khi trang được load lại
+        window.onload = function() {
+            // Lấy id của môn học từ đường dẫn URL
+            var selectedSubjectId = window.location.pathname.split('/').pop();
+
+            // Kiểm tra xem selectedSubjectId có giá trị không rỗng
+            if (selectedSubjectId) {
+                // Đặt giá trị của dropdown thành id của môn học được chọn trước đó
+                document.getElementById("coursesDropdown").value = selectedSubjectId;
+            }
+        };
+
+        function redirectToSelectedSubject() {
+            // Lấy giá trị id của môn học được chọn
+            var selectedSubjectId = document.getElementById("coursesDropdown").value;
+
+            // Kiểm tra xem giá trị đã được chọn chưa
+            if (selectedSubjectId) {
+                // Chuyển hướng đến URL mong muốn với id của môn học được chọn được thêm vào
+                window.location.href = "/review/subject/" + selectedSubjectId;
+            }
+        }
+    </script>
+
+    <!-- Table for class schedule approval -->
+    <h1 th:text="${error}" style="color: red"></h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nhóm</th>
+            <th>Tên lớp học phần</th>
+            <th>Thời gian</th>
+            <th>Giảng viên</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="registeredClasses">
+        <!-- Thymeleaf iteration to populate table rows -->
+        <tr th:each="picked : ${listPicked}">
+            <td th:text="${picked.getId()}"></td>
+            <td th:text="${picked.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
+            <td th:text="${picked.pickedTime}"></td>
+            <td>
+<!--                <select th:id="'teacher-select-' + ${picked.id}" class="teacher-select form-control">-->
+<!--                    &lt;!&ndash; Thymeleaf iteration to populate dropdown options &ndash;&gt;-->
+<!--                    <option th:each="teacher : ${teacherList}" th:value="${teacher.getId()}" th:text="${teacher.getStaff().getMember().getName()}"></option>-->
+<!--                </select>-->
+                <select th:id="'teacher-select-' + ${picked.id}" class="teacher-select form-control">
+                    <!-- Thymeleaf iteration to populate dropdown options -->
+                    <option th:each="teacher : ${teacherList}"
+                            th:value="${teacher.getId()}"
+                            th:text="${teacher.getStaff().getMember().getName()}"
+                            th:selected="${picked.teacher != null and picked.teacher.id == teacher.id}"></option>
+                </select>
+            </td>
+            <td>
+                <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
+                        th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            $('.delete-btn').click(function() {
+                var pickedId = $(this).data('pickedid');
+                var teacherId = $('#' + $(this).data('teacherid')).val();
+                var url = '/review/save-picked?idpicked=' + pickedId + '&idteacher=' + teacherId;
+                window.location.href = url;
+            });
+        });
+    </script>
+
+<!--    <script>-->
+<!--        $(document).ready(function() {-->
+<!--            $('.delete-btn').click(function() {-->
+<!--                console.log("Button clicked"); // Kiểm tra xem hàm này có được kích hoạt khi nhấp vào nút "Lưu" không-->
+<!--                var pickedId = $(this).data('pickedId');-->
+<!--                var teacherId = $('#' + $(this).data('teacherId')).val();-->
+
+<!--                // Gửi yêu cầu POST đến endpoint mới-->
+<!--                $.post("/review/save-picked", { pickedId: pickedId, teacherId: teacherId })-->
+<!--                    .done(function(data) {-->
+<!--                        // Xử lý phản hồi từ server nếu cần-->
+<!--                        console.log(data);-->
+<!--                        // Chuyển hướng sau khi xử lý thành công-->
+<!--                        window.location.href = "/home"; // Thay thế your-redirect-url bằng URL bạn muốn chuyển hướng sau khi xử lý-->
+<!--                    })-->
+<!--                    .fail(function(xhr, status, error) {-->
+<!--                        // Xử lý lỗi nếu có-->
+<!--                        console.error(xhr.responseText);-->
+<!--                    });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+
+
+    <!-- Button to save approval -->
+    <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function loadClasses() {
+        var selectedCourse = $('#coursesDropdown').val();
+        // Here you can make an AJAX request to load classes based on selected course
+        // For demo purpose, let's assume classes are hardcoded
+
+        // Clear existing content
+        $('#classSchedule').empty();
+
+        // Example data (you can replace with actual data)
+        var classes = [
+            { stt: 1, name: "Lớp học phần 1", time: "Thứ 2, 8:00 - 10:00", teachers: ["Giảng viên A", "Giảng viên B"] },
+            { stt: 2, name: "Lớp học phần 2", time: "Thứ 3, 10:00 - 12:00", teachers: ["Giảng viên B", "Giảng viên C"] }
+            // Add more classes as needed
+        ];
+
+        // Populate table with classes
+        classes.forEach(function(cls) {
+            var row = '<tr>';
+            row += '<td>' + cls.stt + '</td>';
+            row += '<td>' + cls.name + '</td>';
+            row += '<td>' + cls.time + '</td>';
+            row += '<td>';
+            row += '<select class="form-control">';
+            cls.teachers.forEach(function(teacher) {
+                row += '<option value="' + teacher + '">' + teacher + '</option>';
+            });
+            row += '</select>';
+            row += '</td>';
+            row += '<td><input type="checkbox"></td>';
+            row += '</tr>';
+            $('#classSchedule').append(row);
+        });
+
+        // Randomly mark a teacher as selected for each class
+        $('#classSchedule tr').each(function() {
+            var randomIndex = Math.floor(Math.random() * $(this).find('select option').length);
+            $(this).find('select option').eq(randomIndex).prop('selected', true);
+        });
+    }
+
+
+    function saveApproval() {
+        // Here you can collect data for approval
+        var approvedClasses = [];
+        $('#classSchedule tr').each(function() {
+            var className = $(this).find('td:nth-child(2)').text();
+            var teacher = $(this).find('select').val();
+            var isApproved = $(this).find('input[type="checkbox"]').prop('checked');
+            if (isApproved) {
+                approvedClasses.push({ className: className, teacher: teacher });
+            }
+        });
+
+        // For demo purpose, let's just log approved classes
+        console.log(approvedClasses);
+        // You can perform further actions like sending data to the server for processing
+    }
+</script>
 
 </body>
 </html>

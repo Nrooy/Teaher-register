@@ -52,6 +52,29 @@ public class ScheduleController {
         }
         return "redirect:/subject/" + subject.getId();
     }
+    @GetMapping ("review/save-picked")
+    public String saveChangePickedByTeacher(@RequestParam("idpicked") Integer pickedId,
+                                            @RequestParam("idteacher") Integer teacherId, ModelMap modelMap , HttpSession session){
+        System.out.println("toi da ve day " + pickedId + "   " + teacherId);
+
+        Teacher teacher = teacherService.findTeacher(teacherId);
+        PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(pickedId);
+
+        List<String> stringList = ConvertListScheduleToString(teacher.getId());
+        Schedule schedule = pickedSectionClass.getSectionClass().getSchedules().get(0);
+        String str = schedule.getDay().getName() + schedule.getPeriod().getName();
+
+        Boolean check = CheckDuplicateSchedule(str, stringList);
+        Subject subject = (Subject) session.getAttribute("subjectReview") ;
+        if (check == true) {
+            pickedSectionClass.setTeacher(teacher);
+            pickedSectionClassService.save(pickedSectionClass);
+        } else {
+            modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
+        }
+
+        return "redirect:/home2";
+    }
 
     @PostMapping("review/check/{idSectionClass}")
     public String CheckDuplicatereview(@PathVariable Integer idSectionClass, @PathVariable Integer IdTeacher, ModelMap modelMap , HttpSession session) {
