@@ -27,8 +27,6 @@ public class MemberController {
     @Autowired
     private pickedSectionClassService pickedSectionClassService;
     @Autowired
-    private departmentRepository departmentRepository;
-    @Autowired
     private subjectService subjectService;
 
     @GetMapping("/login")
@@ -45,35 +43,30 @@ public class MemberController {
     @RequestMapping("/home")
     public String checkLogin(HttpSession session, ModelMap modelMap, @RequestParam(name = "username") String username,
                              @RequestParam(name = "password") String password) {
-        Member member = new Member();
-        member = memberService.checkLogin(username, password);
+        Member member =  memberService.checkLogin(username, password);
         if (member != null) {
             session.setAttribute("member", member);
 
-            Teacher teacher = new Teacher();
-            Staff staff = new Staff();
-            staff = staffService.findStaff(member.getId());
-            teacher = teacherService.findTeacher(staff.getIdMenber());
+            Staff staff  = staffService.findStaff(member.getId());
+            Teacher teacher = teacherService.findTeacher(staff.getIdMenber());
 
-
-            List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
+            List<Subject> subjectList = teacher.getDepartment().getSubjects();
             modelMap.addAttribute("listSubject", subjectList);
 
 
             if (teacher.getPosittion() == 1) {
                 Department department = teacher.getDepartment();
                 modelMap.addAttribute("teacherList", department.getTeachers());
-                session.setAttribute("teacherList", department.getTeachers());
-                session.setAttribute("listSubject", subjectList);
                 List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
                 session.setAttribute("listPicked", pickedSectionClasses);
-
+                session.setAttribute("teacherList", department.getTeachers());
+                session.setAttribute("listSubject", subjectList);
 
                 modelMap.addAttribute("listPicked", pickedSectionClasses);
 
                 return "approve_schedule";
             } else {
-                List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
+                List<PickedSectionClass> pickedSectionClasses = teacher.getPickedSectionClasses();
                 modelMap.addAttribute("listPicked", pickedSectionClasses);
                 session.setAttribute("teacher", teacher);
                 return "register_schedule";
@@ -91,7 +84,7 @@ public class MemberController {
         Member member = (Member) session.getAttribute("member");
         Teacher teacher = member.getStaff().getTeacher();
         Subject subject = (Subject) session.getAttribute("subjectReview");
-        List<Subject> subjectList = subjectService.getAll(member.getStaff().getTeacher().getDepartment().getId());
+        List<Subject> subjectList = teacher.getDepartment().getSubjects();
         Department department = teacher.getDepartment();
         session.setAttribute("teacherList", department.getTeachers());
         session.setAttribute("listSubject", subjectList);

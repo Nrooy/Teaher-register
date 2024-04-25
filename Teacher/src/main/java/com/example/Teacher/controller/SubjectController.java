@@ -29,6 +29,7 @@ public class SubjectController {
     private sectionClassService sectionClassService;
     @Autowired
     private scheduleService scheduleService;
+
     @GetMapping("/subject/{id}")
     public String getAllSectionCalssBySubject(HttpSession session , @PathVariable Integer id,ModelMap modelMap){
         Member member = (Member) session.getAttribute("member");
@@ -46,11 +47,6 @@ public class SubjectController {
         modelMap.addAttribute("listSchedule",scheduleList);
 
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
-        String s = (String) session.getAttribute("loi");
-        if(!s.isEmpty()){
-            session.removeAttribute("loi");
-        }
-        modelMap.addAttribute("loi", s);
 
         String error = (String) session.getAttribute("error");
         if (error != null) {
@@ -76,10 +72,8 @@ public class SubjectController {
         }
 
         List<Subject> subjectList = (List<Subject>) session.getAttribute("listSubject");
-//        session.removeAttribute("listSubject");
 
         List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
-//        session.removeAttribute("teacherList");
 
         modelMap.addAttribute("listPicked",pickedSectionClasses);
         modelMap.addAttribute("listSubject",subjectList);
@@ -98,8 +92,16 @@ public class SubjectController {
             List<SectionClass> list = sectionClassService.getSectionClass(s.getId());
             for(SectionClass se : list) sectionClassList.add(se);
         }
-        return  sectionClassList;
+        List <SectionClass> list1 = sectionClassService.findSectionClassesNotPicked();
+        List <SectionClass> newList = new ArrayList<>();
+        for(SectionClass s1 : list1){
+            for(SectionClass s2 : sectionClassList){
+                if(s2 == s1) newList.add(s1);
+            }
+        }
+        return  newList;
     }
+
     public List<Schedule> getALlListScheduleByListSectionClass(List<SectionClass>sectionClassList){
         List<Schedule> scheduleList = new ArrayList<>();
         for(SectionClass s : sectionClassList){

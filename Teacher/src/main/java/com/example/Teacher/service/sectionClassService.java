@@ -10,4 +10,6 @@ public interface sectionClassService {
     public SectionClass findById(int id);
 
     public List<SectionClass> getAll();
+
+    public List<SectionClass> findSectionClassesNotPicked();
 }
