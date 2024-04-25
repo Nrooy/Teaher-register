@@ -29,13 +29,10 @@ public class PickedSectionClassController {
     semesterService semesterService;
     @Autowired
     scheduleService scheduleService;
-
-
     @Autowired
     private teacherService teacherService;
     @Autowired
     private staffService staffService;
-
     @Autowired
     private subjectService subjectService;
 
@@ -45,17 +42,15 @@ public class PickedSectionClassController {
 
         Member member = (Member) session.getAttribute("member");
 
-        Teacher teacher = new Teacher();
-        Staff staff = new Staff();
-        staff = staffService.findStaff(member.getId());
-        teacher = teacherService.findTeacher(staff.getIdMenber());
-
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>" + teacher.getDepartment().getId());
+        Staff staff = staffService.findStaff(member.getId());
+        Teacher teacher = teacherService.findTeacher(staff.getIdMenber());
 
         List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
-        modelMap.addAttribute("listSubject", subjectList); // gui sang list cac mon hoc
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(staff.getIdMenber());
+
+        modelMap.addAttribute("listSubject", subjectList);
         modelMap.addAttribute("listPicked", pickedSectionClasses);
+
         session.setAttribute("teacher", teacher);
         return "register_schedule";
     }
@@ -88,38 +83,13 @@ public class PickedSectionClassController {
                 pickedSectionClasses.add(pickedSectionClass);
             }
         }
-        List <Teacher> teacherList=(List<Teacher>) session.getAttribute("teacherList");
-        List <Subject> subjectList=(List<Subject>) session.getAttribute("listSubject");
-        List <PickedSectionClass> pickedSectionClasses = (List<PickedSectionClass>) session.getAttribute("listPicked");
+        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
+        List<Subject> subjectList = (List<Subject>) session.getAttribute("listSubject");
+        List<PickedSectionClass> pickedSectionClasses = (List<PickedSectionClass>) session.getAttribute("listPicked");
         modelMap.addAttribute("teacherList", teacherList);
         modelMap.addAttribute("subjectList", subjectList);
         modelMap.addAttribute("listPicked", pickedSectionClasses);
-
         return "review";
     }
 
-
-    public void SavePickedSectionClassAfterReview(List<PickedSectionClass> pickedSectionClasses) {
-        for (PickedSectionClass p : pickedSectionClasses) {
-            p.setReview(1);
-            pickedSectionClassService.save(p);
-        }
-    }
-
-    public int total(List<Subject> subjectList) {
-        int total = 0;
-        for (Subject s : subjectList) {
-            total += s.getNumberOfCredit();
-        }
-        return total;
-    }
-
-    public List<Subject> getListSubject(List<PickedSectionClass> listPicked) {
-        List<Subject> subjectList = new ArrayList<>();
-        for (PickedSectionClass p : listPicked) {
-            Subject s = p.getSectionClass().getSubjectOfSemester().getSubject();
-            subjectList.add(s);
-        }
-        return subjectList;
-    }
 }

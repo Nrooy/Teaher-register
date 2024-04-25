@@ -26,8 +26,6 @@ public class ScheduleController {
     @Autowired
     private pickedSectionClassService pickedSectionClassService;
     @Autowired
-    private sectionClassService sectionClassService;
-    @Autowired
     private teacherService teacherService;
 
     @GetMapping("/schedule/{id}")
@@ -52,10 +50,10 @@ public class ScheduleController {
         }
         return "redirect:/subject/" + subject.getId();
     }
-    @GetMapping ("review/save-picked")
+
+    @GetMapping("review/save-picked")
     public String saveChangePickedByTeacher(@RequestParam("idpicked") Integer pickedId,
-                                            @RequestParam("idteacher") Integer teacherId, ModelMap modelMap , HttpSession session){
-        System.out.println("toi da ve day " + pickedId + "   " + teacherId);
+                                            @RequestParam("idteacher") Integer teacherId, ModelMap modelMap, HttpSession session) {
 
         Teacher teacher = teacherService.findTeacher(teacherId);
         PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(pickedId);
@@ -65,33 +63,32 @@ public class ScheduleController {
         String str = schedule.getDay().getName() + schedule.getPeriod().getName();
 
         Boolean check = CheckDuplicateSchedule(str, stringList);
-        Subject subject = (Subject) session.getAttribute("subjectReview") ;
+        Subject subject = (Subject) session.getAttribute("subjectReview");
         if (check == true) {
             pickedSectionClass.setTeacher(teacher);
             pickedSectionClassService.save(pickedSectionClass);
         } else {
             modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
         }
-
         return "redirect:/home2";
     }
 
     @PostMapping("review/check/{idSectionClass}")
-    public String CheckDuplicatereview(@PathVariable Integer idSectionClass, @PathVariable Integer IdTeacher, ModelMap modelMap , HttpSession session) {
+    public String CheckDuplicatereview(@PathVariable Integer idSectionClass, @PathVariable Integer IdTeacher, ModelMap modelMap, HttpSession session) {
         Teacher teacher = teacherService.findTeacher(IdTeacher);
         List<String> stringList = ConvertListScheduleToString(IdTeacher);
 
         Schedule schedule = getScheduleByIdSectionClass(idSectionClass);
         String str = schedule.getDay().getName() + schedule.getPeriod().getName();
 
-        Boolean check = CheckDuplicateSchedule(str,stringList);
+        Boolean check = CheckDuplicateSchedule(str, stringList);
         if (check == true) {
             schedule.setTeacher(teacher);
             savePickedSectionClassByIdSchedule(schedule, teacher);
         } else {
             modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
         }
-        return "redirect:/review/subject/"+(int) session.getAttribute("idSubject");
+        return "redirect:/review/subject/" + (int) session.getAttribute("idSubject");
 
     }
 
@@ -141,12 +138,13 @@ public class ScheduleController {
         }
         return scheduleList;
     }
+
     public Schedule getScheduleByIdSectionClass(int IdSectionClass) {
         List<Schedule> scheduleList = scheduleService.getScheduleByIdSectionClass(IdSectionClass);
 
         Schedule schedule = new Schedule();
         for (Schedule s : scheduleList) {
-            schedule = s ;
+            schedule = s;
             break;
         }
         return schedule;
