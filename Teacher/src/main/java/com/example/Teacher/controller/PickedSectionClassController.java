@@ -65,11 +65,10 @@ public class PickedSectionClassController {
         PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(id);
         if (pickedSectionClass.getReview() == 1) {
             modelMap.addAttribute("error", "Học phần đã được phê duyệt , Không thể xóa");
-            return "redirect:/home1";
         } else {
             pickedSectionClassService.deleteById(id);
-            return "register_schedule";
         }
+        return "redirect:/home1";
     }
 
     @RequestMapping("review/save-list-picked")

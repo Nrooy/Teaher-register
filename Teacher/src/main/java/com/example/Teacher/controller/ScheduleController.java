@@ -48,7 +48,7 @@ public class ScheduleController {
         if (check == true) {
             savePickedSectionClassByIdSchedule(schedule, teacher);
         } else {
-            session.setAttribute("error", "Lớp học phần được chọn đã bị trùng !");
+            session.setAttribute("loi", "Lớp học phần được chọn đã bị trùng !");
         }
         return "redirect:/subject/" + subject.getId();
     }

@@ -46,6 +46,11 @@ public class SubjectController {
         modelMap.addAttribute("listSchedule",scheduleList);
 
         List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllbyId(member.getId());
+        String s = (String) session.getAttribute("loi");
+        if(!s.isEmpty()){
+            session.removeAttribute("loi");
+        }
+        modelMap.addAttribute("loi", s);
 
         String error = (String) session.getAttribute("error");
         if (error != null) {

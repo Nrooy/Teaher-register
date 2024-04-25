@@ -42,7 +42,7 @@ public class MemberController {
         return "redirect:/login";
     }
 
-    @PostMapping("/home")
+    @RequestMapping("/home")
     public String checkLogin(HttpSession session, ModelMap modelMap, @RequestParam(name = "username") String username,
                              @RequestParam(name = "password") String password) {
         Member member = new Member();
