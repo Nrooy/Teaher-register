@@ -23,11 +23,6 @@ public class sectionClassServiceImpl implements sectionClassService{
     }
 
     @Override
-    public List<SectionClass> getAll() {
-        return sectionClassRepository.findAll();
-    }
-
-    @Override
     public List<SectionClass> findSectionClassesNotPicked() {
         return sectionClassRepository.findSectionClassesNotPicked();
     }

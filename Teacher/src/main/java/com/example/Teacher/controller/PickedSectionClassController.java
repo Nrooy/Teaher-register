@@ -24,12 +24,6 @@ public class PickedSectionClassController {
     @Autowired
     pickedSectionClassService pickedSectionClassService;
     @Autowired
-    sectionClassService sectionClassService;
-    @Autowired
-    semesterService semesterService;
-    @Autowired
-    scheduleService scheduleService;
-    @Autowired
     private teacherService teacherService;
     @Autowired
     private staffService staffService;

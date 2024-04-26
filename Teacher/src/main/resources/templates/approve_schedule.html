@@ -24,7 +24,7 @@
       <option value="">Chọn một môn học</option>
       <!-- Sử dụng Thymeleaf để lặp qua danh sách các môn học và hiển thị chúng -->
       <th:block th:each="subject : ${listSubject}">
-        <option th:value="${subject.id}" th:text="${subject.name}"></option>
+        <option th:value="${subject.getId()}" th:text="${subject.getName()}"></option>
       </th:block>
     </select>
   </div>
@@ -62,7 +62,8 @@
     <tr>
       <th>Nhóm</th>
       <th>Tên lớp học phần</th>
-      <th>Thời gian</th>
+      <th>Thời gian dạy</th>
+      <th>Thời gian đăng kí</th>
       <th>Giảng viên</th>
       <th>Action</th>
     </tr>
@@ -72,6 +73,7 @@
     <tr th:each="picked : ${listPicked}">
       <td th:text="${picked.getId()}"></td>
       <td th:text="${picked.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
+      <td th:text="${picked.getSectionClass().getSchedules().get(0).getPeriod().getName()} + ' ' +  ${picked.getSectionClass().getSchedules().get(0).getDay().getName()} +' '+ ${picked.getSectionClass().getSchedules().get(0).getPeriod().getDescription()}"></td>
       <td th:text="${picked.pickedTime}"></td>
       <td>
 <!--        <select th:id="'teacher-select-' + ${picked.id}" class="teacher-select form-control">-->
@@ -86,10 +88,19 @@
                   th:selected="${picked.teacher != null and picked.teacher.id == teacher.id}"></option>
         </select>
       </td>
+<!--      <td>-->
+<!--        <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"-->
+<!--                th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu-->
+<!--        </button>-->
+<!--      </td>-->
       <td>
         <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
-                th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu
-        </button>
+                th:if="${picked.review == 1}"
+                th:text="'Đã Phê Duyệt'"
+                disabled>Lưu</button>
+        <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
+                th:if="${picked.review != 1}"
+                th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu</button>
       </td>
     </tr>
     </tbody>
@@ -109,21 +120,7 @@
   <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>
 </div>
 
-<!--<script th:inline="javascript">-->
-<!--  $(document).ready(function() {-->
-<!--    // Function to save approval-->
-<!--    function saveApproval() {-->
-<!--      var idPickeds = [];-->
-<!--      // Loop through all selected items and add their IDs to the list-->
-<!--      $('.delete-btn').each(function() {-->
-<!--        idPickeds.push($(this).data('pickedid'));-->
-<!--      });-->
-<!--      // Create URL with list of picked IDs-->
-<!--      var url = '/review/save-list-picked?idPickeds=' + idPickeds.join(',');-->
-<!--      // Redirect to the controller method to handle saving the list-->
-<!--      window.location.href = url;-->
-<!--    }-->
-<!--  });-->
+
 </script>
 <script th:inline="javascript">
   // Function to save approval

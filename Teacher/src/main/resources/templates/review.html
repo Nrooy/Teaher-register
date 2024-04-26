@@ -86,10 +86,19 @@
                             th:selected="${picked.teacher != null and picked.teacher.id == teacher.id}"></option>
                 </select>
             </td>
+<!--            <td>-->
+<!--                <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"-->
+<!--                        th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu-->
+<!--                </button>-->
+<!--            </td>-->
             <td>
                 <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
-                        th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu
-                </button>
+                        th:if="${picked.review == 1}"
+                        th:text="'Đã Phê Duyệt'"
+                        disabled>Lưu</button>
+                <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
+                        th:if="${picked.review != 1}"
+                        th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu</button>
             </td>
         </tr>
         </tbody>

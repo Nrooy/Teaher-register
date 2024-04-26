@@ -73,7 +73,7 @@
         </tr>
         </tbody>
     </table>
-    <h3 th:text="${loi}" style="color: red"></h3>
+    <h3 th:text="${error}" style="color: red"></h3>
     <script>
         function redirectToSelectedSchedule(checkbox) {
             // Lấy giá trị id của môn học được chọn
@@ -94,7 +94,8 @@
         <tr>
             <th>Nhóm</th>
             <th>Tên lớp học phần</th>
-            <th>Thời gian</th>
+            <th>Thời gian dạy</th>
+            <th>Thời gian đăng kí</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -103,6 +104,7 @@
         <tr th:each="picked : ${listPicked}">
             <td th:text="${picked.sectionClass.getName()}"></td>
             <td th:text="${picked.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
+            <td th:text="${picked.getSectionClass().getSchedules().get(0).getPeriod().getName()} + ' ' +  ${picked.getSectionClass().getSchedules().get(0).getDay().getName()} +' '+ ${picked.getSectionClass().getSchedules().get(0).getPeriod().getDescription()}"></td>
             <td th:text="${picked.pickedTime}"></td>
             <td>
                 <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger" th:attr="data-id=${picked.id}">Xóa</button>

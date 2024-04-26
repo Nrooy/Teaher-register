@@ -14,18 +14,6 @@
     <br>
     <h2>Đăng kí lịch dạy</h2>
 
-    <!-- Dropdown list of courses -->
-<!--    <div class="form-group">-->
-<!--        <label for="coursesDropdown">Chọn môn học:</label>-->
-<!--        <select class="form-control" id="coursesDropdown">-->
-<!--            <option value="">Chọn một môn học</option>-->
-<!--            &lt;!&ndash; Sử dụng Thymeleaf để lặp qua danh sách các môn học và hiển thị chúng &ndash;&gt;-->
-<!--            <th:block th:each="subject : ${listSubject}">-->
-<!--                <option th:value="${subject.id}" th:text="${subject.name}"></option>-->
-<!--            </th:block>-->
-<!--        </select>-->
-<!--    </div>-->
-
     <div class="form-group">
         <label for="coursesDropdown">Chọn môn học:</label>
         <select class="form-control" id="coursesDropdown" onchange="redirectToSelectedSubject()">
@@ -111,7 +99,7 @@
         <tr>
             <th>Nhóm</th>
             <th>Tên lớp học phần</th>
-            <th>Thời gian</th>
+            <th>Thời gian đăng kí</th>
             <th>Action</th>
         </tr>
         </thead>
