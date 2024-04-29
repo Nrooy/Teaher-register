@@ -44,16 +44,19 @@ public class PickedSectionClassController {
 
         modelMap.addAttribute("listSubject", subjectList);
         modelMap.addAttribute("listPicked", pickedSectionClasses);
+        String s = (String) session.getAttribute("error1");
+        session.removeAttribute("error1");
+        modelMap.addAttribute("error1", s);
 
         session.setAttribute("teacher", teacher);
         return "register_schedule";
     }
 
     @GetMapping("delete/{id}")
-    public String deletePicked(@PathVariable Integer id, ModelMap modelMap) {
+    public String deletePicked(@PathVariable Integer id, ModelMap modelMap, HttpSession session) {
         PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(id);
         if (pickedSectionClass.getReview() == 1) {
-            modelMap.addAttribute("error", "Học phần đã được phê duyệt , Không thể xóa");
+            session.setAttribute("error1", "Học phần đã được phê duyệt , Không thể xóa");
         } else {
             pickedSectionClassService.deleteById(id);
         }
@@ -77,12 +80,24 @@ public class PickedSectionClassController {
                 pickedSectionClasses.add(pickedSectionClass);
             }
         }
-        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
-        List<Subject> subjectList = (List<Subject>) session.getAttribute("listSubject");
-        List<PickedSectionClass> pickedSectionClasses = (List<PickedSectionClass>) session.getAttribute("listPicked");
-        modelMap.addAttribute("teacherList", teacherList);
-        modelMap.addAttribute("subjectList", subjectList);
+
+        Member member = (Member) session.getAttribute("member");
+
+        Staff staff = staffService.findStaff(member.getId());
+        Teacher teacher = teacherService.findTeacher(staff.getIdMenber());
+
+        List<Subject> subjectList = subjectService.getAll(teacher.getDepartment().getId());
+        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
+
+        modelMap.addAttribute("listSubject", subjectList);
         modelMap.addAttribute("listPicked", pickedSectionClasses);
+
+        List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
+//        List<Subject> subjectList = (List<Subject>) session.getAttribute("listSubject");
+//        List<PickedSectionClass> pickedSectionClasses = (List<PickedSectionClass>) session.getAttribute("listPicked");
+        modelMap.addAttribute("teacherList", teacherList);
+//        modelMap.addAttribute("subjectList", subjectList);
+//        modelMap.addAttribute("listPicked", pickedSectionClasses);
         return "review";
     }
 

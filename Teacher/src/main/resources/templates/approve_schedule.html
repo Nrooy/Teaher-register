@@ -15,6 +15,8 @@
 <body>
 
 <div class="container mt-5">
+  <div th:include="subTemplates/header-home.html"> </div>
+
   <h2>Phê duyệt lịch đăng kí</h2>
 
   <!-- Dropdown list of courses -->
@@ -97,6 +99,7 @@
         <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
                 th:if="${picked.review == 1}"
                 th:text="'Đã Phê Duyệt'"
+                th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}"
                 disabled>Lưu</button>
         <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
                 th:if="${picked.review != 1}"
@@ -117,12 +120,30 @@
   </script>
 
   <!-- Button to save approval -->
-  <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>
+<!--  <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>-->
+  <button type="button" class="btn btn-primary" onclick="confirmSaveApproval()">Lưu phê duyệt</button>
+
 </div>
 
 
+
 </script>
-<script th:inline="javascript">
+
+<script>
+  // Function to handle confirming save approval
+  function confirmSaveApproval() {
+    // Hiển thị dialog xác nhận
+    var confirmation = confirm("Bạn có chắc chắn muốn lưu phê duyệt không?");
+
+    // Kiểm tra xem người dùng đã nhấn OK hay Cancel
+    if (confirmation) {
+      // Nếu nhấn OK, thực hiện các tác vụ lưu phê duyệt
+      saveApproval();
+    } else {
+      // Nếu nhấn Cancel, không làm gì cả
+    }
+  }
+
   // Function to save approval
   function saveApproval() {
     var idPickeds = [];

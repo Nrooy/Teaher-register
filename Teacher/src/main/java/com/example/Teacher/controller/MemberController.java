@@ -49,6 +49,7 @@ public class MemberController {
 
             Staff staff  = staffService.findStaff(member.getId());
             Teacher teacher = teacherService.findTeacher(staff.getIdMenber());
+            session.setAttribute("teacher", teacher);
 
             List<Subject> subjectList = teacher.getDepartment().getSubjects();
             modelMap.addAttribute("listSubject", subjectList);
@@ -68,7 +69,7 @@ public class MemberController {
             } else {
                 List<PickedSectionClass> pickedSectionClasses = teacher.getPickedSectionClasses();
                 modelMap.addAttribute("listPicked", pickedSectionClasses);
-                session.setAttribute("teacher", teacher);
+
                 return "register_schedule";
             }
         } else {

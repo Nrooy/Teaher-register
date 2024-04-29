@@ -15,6 +15,8 @@
 <body>
 
 <div class="container mt-5">
+    <div th:include="subTemplates/header-home.html"> </div>
+
     <h2>Phê duyệt lịch đăng kí</h2>
 
     <!-- Dropdown list of courses -->
@@ -62,7 +64,8 @@
         <tr>
             <th>Nhóm</th>
             <th>Tên lớp học phần</th>
-            <th>Thời gian</th>
+            <th>Thời gian dạy</th>
+            <th>Thời gian đăng kí</th>
             <th>Giảng viên</th>
             <th>Action</th>
         </tr>
@@ -72,6 +75,7 @@
         <tr th:each="picked : ${listPicked}">
             <td th:text="${picked.getId()}"></td>
             <td th:text="${picked.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
+            <td th:text="${picked.getSectionClass().getSchedules().get(0).getPeriod().getName()} + ' ' +  ${picked.getSectionClass().getSchedules().get(0).getDay().getName()} +' '+ ${picked.getSectionClass().getSchedules().get(0).getPeriod().getDescription()}"></td>
             <td th:text="${picked.pickedTime}"></td>
             <td>
 <!--                <select th:id="'teacher-select-' + ${picked.id}" class="teacher-select form-control">-->
@@ -95,6 +99,7 @@
                 <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
                         th:if="${picked.review == 1}"
                         th:text="'Đã Phê Duyệt'"
+                        th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}"
                         disabled>Lưu</button>
                 <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
                         th:if="${picked.review != 1}"

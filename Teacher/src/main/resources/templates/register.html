@@ -55,6 +55,7 @@
     <table class="table" id="availableClassesTable">
         <thead>
         <tr>
+            <th>Nhóm</th>
             <th>Tên lớp học phần</th>
             <th>Thời gian</th>
             <th>Chọn</th>
@@ -64,6 +65,7 @@
         <!-- Thymeleaf iteration to populate table rows -->
         <tr th:each="schedule : ${listSchedule}">
             <td th:text="${schedule.getSectionClass().getName()}"></td>
+            <td th:text="${schedule.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
                 <!-- Thymeleaf checkbox -->
@@ -73,7 +75,81 @@
         </tr>
         </tbody>
     </table>
-    <h3 th:text="${error}" style="color: red"></h3>
+<!--    <h3 th:text="${error}" style="color: red"></h3>-->
+
+<!--    <h3 th:text="${error}" style="display: none; color: red" id="errorMessage"></h3>-->
+    <h3 th:text="${error}" style="display: none; color: red" id="errorMessage"></h3>
+    <style>
+        .error-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            z-index: 9999; /* Đảm bảo dialog hiển thị trên các phần tử khác */
+            text-align: center; /* Canh giữa nội dung */
+        }
+
+        .error-dialog p {
+            color: red; /* Màu chữ đỏ */
+            font-weight: bold; /* Chữ in đậm */
+            font-size: 20px; /* Kích thước chữ lớn hơn */
+            margin-bottom: 10px;
+        }
+
+        .error-dialog button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .error-dialog button:hover {
+            background-color: #0056b3;
+        }
+
+
+    </style>
+
+    <script>
+        // Kiểm tra nếu có error và dữ liệu error khác rỗng, hiển thị dialog
+        var errorMessage = document.getElementById('errorMessage').innerText.trim();
+        if (errorMessage !== '') {
+            // Tạo dialog
+            var dialog = document.createElement('div');
+            dialog.className = 'error-dialog';
+
+            // Tạo nội dung cho dialog
+            var dialogContent = document.createElement('p');
+            dialogContent.innerText = errorMessage;
+
+            // Tạo nút OK
+            var okButton = document.createElement('button');
+            okButton.innerText = 'OK';
+
+            // Khi click vào nút OK, đóng dialog
+            okButton.addEventListener('click', function() {
+                dialog.style.display = 'none';
+            });
+
+            // Thêm nội dung và nút vào dialog
+            dialog.appendChild(dialogContent);
+            dialog.appendChild(okButton);
+
+            // Thêm dialog vào trang
+            document.body.appendChild(dialog);
+        }
+    </script>
+
+
+
+
     <script>
         function redirectToSelectedSchedule(checkbox) {
             // Lấy giá trị id của môn học được chọn

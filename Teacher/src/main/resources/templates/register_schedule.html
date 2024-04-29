@@ -55,6 +55,7 @@
         <!-- Tiêu đề bảng -->
         <thead>
         <tr>
+            <th>Nhóm</th>
             <th>Tên lớp học phần</th>
             <th>Thời gian</th>
             <th>Chọn</th>
@@ -64,6 +65,7 @@
         <tbody id="availableClassesBody">
         <tr th:each="schedule : ${listSchedule}">
             <td th:text="${schedule.getSectionClass().getName()}"></td>
+            <td th:text="${schedule.getSectionClass().getSubjectOfSemester().getSubject().getName()}"></td>
             <td th:text="${schedule.getPeriod().getName()} + ' ' +  ${schedule.getDay().getName()} +' '+ ${schedule.getPeriod().getDescription()}"></td>
             <td>
                 <!-- Checkbox -->
@@ -90,6 +92,76 @@
                 }
             });
         });
+    </script>
+
+
+    <h3 th:text="${error1}" style="display: none; color: red" id="errorMessage"></h3>
+    <style>
+        .error-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            z-index: 9999; /* Đảm bảo dialog hiển thị trên các phần tử khác */
+            text-align: center; /* Canh giữa nội dung */
+        }
+
+        .error-dialog p {
+            color: red; /* Màu chữ đỏ */
+            font-weight: bold; /* Chữ in đậm */
+            font-size: 20px; /* Kích thước chữ lớn hơn */
+            margin-bottom: 10px;
+        }
+
+        .error-dialog button {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .error-dialog button:hover {
+            background-color: #0056b3;
+        }
+
+
+    </style>
+
+    <script>
+        // Kiểm tra nếu có error và dữ liệu error khác rỗng, hiển thị dialog
+        var errorMessage = document.getElementById('errorMessage').innerText.trim();
+        if (errorMessage !== '') {
+            // Tạo dialog
+            var dialog = document.createElement('div');
+            dialog.className = 'error-dialog';
+
+            // Tạo nội dung cho dialog
+            var dialogContent = document.createElement('p');
+            dialogContent.innerText = errorMessage;
+
+            // Tạo nút OK
+            var okButton = document.createElement('button');
+            okButton.innerText = 'OK';
+
+            // Khi click vào nút OK, đóng dialog
+            okButton.addEventListener('click', function() {
+                dialog.style.display = 'none';
+            });
+
+            // Thêm nội dung và nút vào dialog
+            dialog.appendChild(dialogContent);
+            dialog.appendChild(okButton);
+
+            // Thêm dialog vào trang
+            document.body.appendChild(dialog);
+        }
     </script>
 
 
@@ -196,58 +268,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        // Sample data of available classes for each course
-        var classesData = {
-            course1: [
-                { name: "Lớp học phần 1 - Môn 1", time: "Thứ 2, 8:00 - 10:00" },
-                { name: "Lớp học phần 2 - Môn 1", time: "Thứ 3, 10:00 - 12:00" },
-            ],
-            course2: [
-                { name: "Lớp học phần 1 - Môn 2", time: "Thứ 4, 8:00 - 10:00" },
-                { name: "Lớp học phần 2 - Môn 2", time: "Thứ 5, 10:00 - 12:00" },
-            ],
-            course3: [
-                { name: "Lớp học phần 1 - Môn 3", time: "Thứ 6, 8:00 - 10:00" },
-                { name: "Lớp học phần 2 - Môn 3", time: "Thứ 7, 10:00 - 12:00" },
-            ]
-            // Add more data as needed
-        };
-
-        // Function to populate available classes for the selected course
-        function populateAvailableClasses(course) {
-            var classes = classesData[course];
-            var tableBody = $('#availableClassesBody');
-            tableBody.empty();
-            if (classes) {
-                $('#availableClassesTable').show();
-                $.each(classes, function(index, classInfo) {
-                    tableBody.append('<tr><td>' + classInfo.name + '</td><td>' + classInfo.time + '</td><td><input type="checkbox" name="' + classInfo.name + '"></td></tr>');
-                });
-            } else {
-                $('#availableClassesTable').hide();
-            }
-        }
-
-        // Event listener for dropdown change
-        $('#coursesDropdown').change(function() {
-            var selectedCourse = $(this).val();
-            populateAvailableClasses(selectedCourse);
-        });
-
-        // Event listener for checkbox changes to register classes
-        $(document).on('change', 'input[type="checkbox"]', function() {
-            var className = $(this).closest('tr').find('td:first').text();
-            var time = $(this).closest('tr').find('td:eq(1)').text();
-            if (this.checked) {
-                $('#registeredClasses').append('<tr><td>' + className + '</td><td>' + time + '</td></tr>');
-            } else {
-                $('#registeredClasses').find('td:contains(' + className + ')').closest('tr').remove();
-            }
-        });
-    });
-</script>
 
 </body>
 </html>
