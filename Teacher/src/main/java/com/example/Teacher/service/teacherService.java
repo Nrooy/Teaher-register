@@ -7,5 +7,4 @@ import java.util.List;
 public interface teacherService {
     public Teacher findTeacher(int idStaff);
 
-    public List<Teacher> getAllTeacherByIdDepartment(int idDepartment);
 }

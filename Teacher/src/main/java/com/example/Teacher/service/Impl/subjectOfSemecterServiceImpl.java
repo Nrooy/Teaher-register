@@ -13,11 +13,6 @@ public class subjectOfSemecterServiceImpl implements subjectOfSemesterService{
     private subjectOfSemesterRepository subjectOfSemesterRepository;
 
     @Override
-    public List<SubjectOfSemester> findAllSos(int id) {
-        return subjectOfSemesterRepository.findSubjectOfSemesterByIdSemester(id);
-    }
-
-    @Override
     public List<SubjectOfSemester> finfAllSosByIdSubject(int id) {
         return subjectOfSemesterRepository.findSubjectOfSemesterBySubject(id);
     }

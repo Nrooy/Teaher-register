@@ -49,6 +49,7 @@ public class MemberController {
 
             Staff staff  = staffService.findStaff(member.getId());
             Teacher teacher = teacherService.findTeacher(staff.getIdMenber());
+            session.setAttribute("teacher", teacher);
 
             List<Subject> subjectList = teacher.getDepartment().getSubjects();
             modelMap.addAttribute("listSubject", subjectList);
@@ -68,7 +69,7 @@ public class MemberController {
             } else {
                 List<PickedSectionClass> pickedSectionClasses = teacher.getPickedSectionClasses();
                 modelMap.addAttribute("listPicked", pickedSectionClasses);
-                session.setAttribute("teacher", teacher);
+
                 return "register_schedule";
             }
         } else {
@@ -79,18 +80,27 @@ public class MemberController {
 
 
     @GetMapping("/home2")
-    public String redirect(HttpSession session) {
+    public String redirect(HttpSession session, ModelMap modelMap) {
 
         Member member = (Member) session.getAttribute("member");
-        Teacher teacher = member.getStaff().getTeacher();
-        Subject subject = (Subject) session.getAttribute("subjectReview");
+
+        Staff staff  = staffService.findStaff(member.getId());
+        Teacher teacher = teacherService.findTeacher(staff.getIdMenber());
+
         List<Subject> subjectList = teacher.getDepartment().getSubjects();
+        modelMap.addAttribute("listSubject", subjectList);
+
+
+        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(teacher.getDepartment().getId());
+        modelMap.addAttribute("listPicked", pickedSectionClasses);
+
         Department department = teacher.getDepartment();
+        modelMap.addAttribute("teacherList", department.getTeachers());
         session.setAttribute("teacherList", department.getTeachers());
         session.setAttribute("listSubject", subjectList);
-        List<PickedSectionClass> pickedSectionClasses = pickedSectionClassService.getAllByIdDepartment(member.getStaff().getTeacher().getDepartment().getId());
+
         session.setAttribute("listPicked", pickedSectionClasses);
 
-        return "redirect:/review/subject/" + subject.getId();
+        return "approve_schedule";
     }
 }

@@ -16,9 +16,4 @@ public class teacherServiceImpl implements teacherService {
     public Teacher findTeacher(int idStaff) {
         return respository.findTeacher(idStaff);
     }
-
-    @Override
-    public List<Teacher> getAllTeacherByIdDepartment(int idDepartment) {
-        return respository.findAllByIdDepartment(idDepartment);
-    }
 }

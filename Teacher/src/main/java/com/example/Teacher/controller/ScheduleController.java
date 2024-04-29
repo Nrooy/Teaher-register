@@ -46,7 +46,7 @@ public class ScheduleController {
         if (check == true) {
             savePickedSectionClassByIdSchedule(schedule, teacher);
         } else {
-            session.setAttribute("loi", "Lớp học phần được chọn đã bị trùng !");
+            session.setAttribute("error", "Lớp học phần được chọn đã bị trùng !");
         }
         return "redirect:/subject/" + subject.getId();
     }
@@ -56,6 +56,7 @@ public class ScheduleController {
                                             @RequestParam("idteacher") Integer teacherId, ModelMap modelMap, HttpSession session) {
 
         Teacher teacher = teacherService.findTeacher(teacherId);
+        session.setAttribute("teacher", teacher);
         PickedSectionClass pickedSectionClass = pickedSectionClassService.findById(pickedId);
 
         List<String> stringList = ConvertListScheduleToString(teacher.getId());
