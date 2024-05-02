@@ -13,11 +13,6 @@ public class scheduleServiceImpl implements scheduleService{
     private scheduleRespository scheduleRespository;
 
     @Override
-    public List<Schedule> getAll() {
-        return scheduleRespository.findAll();
-    }
-
-    @Override
     public List<Schedule> getScheduleByIdSectionClass(int idSectionClass) {
         return scheduleRespository.getScheduleByIdSectionClass(idSectionClass);
     }
