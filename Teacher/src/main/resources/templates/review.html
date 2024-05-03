@@ -90,11 +90,6 @@
                             th:selected="${picked.teacher != null and picked.teacher.id == teacher.id}"></option>
                 </select>
             </td>
-<!--            <td>-->
-<!--                <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"-->
-<!--                        th:attr="data-pickedId=${picked.id}, data-teacherId='teacher-select-' + ${picked.id}">Lưu-->
-<!--                </button>-->
-<!--            </td>-->
             <td>
                 <button th:id="'delete-btn-' + ${picked.id}" class="delete-btn btn btn-danger"
                         th:if="${picked.review == 1}"
@@ -119,32 +114,6 @@
         });
     </script>
 
-<!--    <script>-->
-<!--        $(document).ready(function() {-->
-<!--            $('.delete-btn').click(function() {-->
-<!--                console.log("Button clicked"); // Kiểm tra xem hàm này có được kích hoạt khi nhấp vào nút "Lưu" không-->
-<!--                var pickedId = $(this).data('pickedId');-->
-<!--                var teacherId = $('#' + $(this).data('teacherId')).val();-->
-
-<!--                // Gửi yêu cầu POST đến endpoint mới-->
-<!--                $.post("/review/save-picked", { pickedId: pickedId, teacherId: teacherId })-->
-<!--                    .done(function(data) {-->
-<!--                        // Xử lý phản hồi từ server nếu cần-->
-<!--                        console.log(data);-->
-<!--                        // Chuyển hướng sau khi xử lý thành công-->
-<!--                        window.location.href = "/home"; // Thay thế your-redirect-url bằng URL bạn muốn chuyển hướng sau khi xử lý-->
-<!--                    })-->
-<!--                    .fail(function(xhr, status, error) {-->
-<!--                        // Xử lý lỗi nếu có-->
-<!--                        console.error(xhr.responseText);-->
-<!--                    });-->
-<!--            });-->
-<!--        });-->
-<!--    </script>-->
-
-
-<!--    &lt;!&ndash; Button to save approval &ndash;&gt;-->
-<!--    <button type="button" class="btn btn-primary" onclick="saveApproval()">Lưu phê duyệt</button>-->
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

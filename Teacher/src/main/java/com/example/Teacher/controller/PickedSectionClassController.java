@@ -93,11 +93,7 @@ public class PickedSectionClassController {
         modelMap.addAttribute("listPicked", pickedSectionClasses);
 
         List<Teacher> teacherList = (List<Teacher>) session.getAttribute("teacherList");
-//        List<Subject> subjectList = (List<Subject>) session.getAttribute("listSubject");
-//        List<PickedSectionClass> pickedSectionClasses = (List<PickedSectionClass>) session.getAttribute("listPicked");
         modelMap.addAttribute("teacherList", teacherList);
-//        modelMap.addAttribute("subjectList", subjectList);
-//        modelMap.addAttribute("listPicked", pickedSectionClasses);
         return "review";
     }
 
