@@ -107,9 +107,11 @@ public class ScheduleController {
 
         List<String> list = new ArrayList<>();
         for (Schedule s : scheduleList) {
-            String str = "";
-            str = str + s.getDay().getName() + s.getPeriod().getName();
-            list.add(str);
+            if(s!=null) {
+                String str = "";
+                str = str + s.getDay().getName() + s.getPeriod().getName();
+                list.add(str);
+            }
         }
         return list;
     }

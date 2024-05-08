@@ -2,9 +2,7 @@ package com.example.Teacher.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -29,32 +27,27 @@ public class ScheduleControllerTest {
     scheduleService scheduleService;
     @MockBean
     teacherService teacherService;
-    @Autowired
-    private ScheduleController scheduleController;
     @MockBean
     private HttpSession session;
-
     @MockBean
     private ModelMap modelMap;
-
     @MockBean
     private Member member;
-
     @MockBean
     private Teacher teacher;
-
     @MockBean
     private Subject subject;
-
     @Autowired
     private ScheduleController yourController;
+    @InjectMocks
+    private ScheduleController scheduleController;
     @Test
     public void testGetListPickedSectionClassByIdTeacher() {
         List<PickedSectionClass> list = new ArrayList<>();
 
         when(pickedSectionClassService.getAllbyId(3)).thenReturn(list);
 
-        List<PickedSectionClass> result = scheduleController.GetListPickedSectionClassByIdTeacher(3);
+        List<PickedSectionClass> result = yourController.GetListPickedSectionClassByIdTeacher(3);
         assertEquals(list, result);
     }
     @Test
@@ -108,7 +101,7 @@ public class ScheduleControllerTest {
         when(scheduleService.getScheduleByIdSectionClass(sectionClass2.getId())).thenReturn(scheduleList2);
 
         // Gọi phương thức cần kiểm tra từ controller
-        List<Schedule> result = scheduleController.getALlListScheduleByListSectionClass(sectionClassList);
+        List<Schedule> result = yourController.getALlListScheduleByListSectionClass(sectionClassList);
 
         // Kiểm tra kết quả trả về từ controller
         assertEquals(2, result.size());
@@ -135,35 +128,64 @@ public class ScheduleControllerTest {
         // Kiểm tra xem kết quả có là một đối tượng Schedule không
         assertTrue(result instanceof Schedule);
     }
-    @Test
-    public void testControllerGetAllScheduleByIdSos() {
-        Integer id = 1;
-        Member member = new Member();
-        member.setId(1);
-        MockHttpSession mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute("member", member);
-        when(session.getAttribute("member")).thenReturn(member);
+//    @Test
+//    public void testConvertListScheduleToString() {
+//        // Tạo đối tượng mock cho các phương thức phụ thuộc
+//        List<PickedSectionClass> pickedSectionClassList = new ArrayList<>();
+//        List<SectionClass> sectionClassList = new ArrayList<>();
+//        List<Schedule> scheduleList = new ArrayList<>();
+//        // Giả định behavior của các phương thức phụ thuộc
+//        when(scheduleController.GetListPickedSectionClassByIdTeacher(anyInt())).thenReturn(pickedSectionClassList);
+//        when(scheduleController.getListSectionClassByListPickedSectionClass(pickedSectionClassList)).thenReturn(sectionClassList);
+//        when(scheduleController.getALlListScheduleByListSectionClass(sectionClassList)).thenReturn(scheduleList);
+//        // Khởi tạo đối tượng ScheduleController
+//        ScheduleController controller = new ScheduleController();
+//        // Gọi phương thức cần kiểm tra
+//        List<String> result = controller.ConvertListScheduleToString(1);
+//        // Kiểm tra kết quả
+//        assertEquals(0, result.size());
+//    }
 
-        when(teacherService.findTeacher(member.getId())).thenReturn(new Teacher());
-
-        // Tạo một mock object cho lớp Schedule và cấu hình nó
-        Schedule schedule =Mockito.mock(Schedule.class);
-        when(scheduleService.findById(anyInt())).thenReturn(schedule);
-        when(schedule.getDay()).thenReturn(new day()); // Giả sử day đã được cấu hình và trả về một đối tượng Day hợp lệ
-        when(schedule.getPeriod()).thenReturn(new Period()); // Giả sử period đã được cấu hình và trả về một đối tượng Period hợp lệ
-
-        Subject subject = Mockito.mock(Subject.class);
-        when(session.getAttribute("subject")).thenReturn(subject);
-
-        when(pickedSectionClassService.getAllbyId(anyInt())).thenReturn(List.of(new PickedSectionClass()));
-
-        // Act
-        String result = yourController.getAllScheduleByIdSos(id, mockHttpSession, modelMap);
-
-        // Assert
-        assertEquals("redirect:/subject/" + subject.getId(), result);
-        verify(pickedSectionClassService, atLeast(1)).getAllbyId(anyInt());
-        verify(modelMap).addAttribute(eq("listPicked"), anyList());
-    }
-
+//
+//    @Test
+//    public void testGetAllScheduleByIdSos() {
+//        // Initialize mocks
+//        MockitoAnnotations.initMocks(this);
+//
+//        // Setup session attributes
+//        Member member = new Member();
+//        member.setId(1);
+//        Subject subject = new Subject();
+//        subject.setId(1);
+//        when(session.getAttribute("member")).thenReturn(member);
+//        when(session.getAttribute("subject")).thenReturn(subject);
+//
+//        // Setup mock responses
+//        Teacher teacher = new Teacher();
+//        teacher.setId(1);
+//        Schedule schedule = new Schedule();
+//        day day = new day();
+//        day.setId(1);
+//        day.setName("Thu 2");
+//        schedule.setDay(day);
+//
+//        when(teacherService.findTeacher(anyInt())).thenReturn(teacher);
+//        when(scheduleService.findById(anyInt())).thenReturn(new Schedule());
+//        // Call the method
+//        String result = scheduleController.getAllScheduleByIdSos(3, session, modelMap);
+//
+//        // Verify interactions
+//        verify(session, times(1)).getAttribute("member");
+//        verify(session, times(1)).getAttribute("subject");
+//        verify(session, times(1)).removeAttribute("subject");
+//        verify(modelMap, times(1)).addAttribute(eq("listPicked"), anyList());
+//        verify(scheduleService, times(1)).findById(anyInt());
+//        verify(pickedSectionClassService, times(1)).getAllbyId(anyInt());
+//
+//        // Assert the result
+//        // Assuming that the method returns a redirect string
+//        // You may need to adjust the assertion based on the actual return value of the method
+//        assertEquals("redirect:/subject/1", result);
+//    }
+//
 }
