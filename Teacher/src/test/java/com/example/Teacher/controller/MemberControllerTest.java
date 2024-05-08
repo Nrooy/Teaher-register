@@ -39,8 +39,8 @@ public class MemberControllerTest {
 
     @Test
     public void testCheckLogin_validCredentials_redirectsToApproveSchedule() throws Exception {
-        String username = "username";
-        String password = "password";
+        String username = "trinhnc";
+        String password = "trinhnc";
         Member member = new Member();
         Staff staff = new Staff();
         staff.setIdMenber(1);
@@ -63,8 +63,8 @@ public class MemberControllerTest {
 
     @Test
     public void testCheckLogin_validCredentials_redirectsToRegisterSchedule() throws Exception {
-        String username = "username";
-        String password = "password";
+        String username = "trinhnc";
+        String password = "trinhnc";
         Member member = new Member();
         Staff staff = new Staff();
         staff.setIdMenber(1);
@@ -87,8 +87,8 @@ public class MemberControllerTest {
 
     @Test
     public void testCheckLogin_invalidCredentials_redirectsToLoginPage() throws Exception {
-        String username = "username";
-        String password = "password";
+        String username = "trinhnc";
+        String password = "trinhnc1";
         when(memberService.checkLogin(username, password)).thenReturn(null);
         HttpSession session = Mockito.mock(HttpSession.class);
         ModelMap modelMap = Mockito.mock(ModelMap.class);
@@ -97,6 +97,5 @@ public class MemberControllerTest {
         assertEquals("login-form", viewName);
         verify(modelMap).addAttribute("error", "Tai khoan mat khau khong chinh xac");
     }
-
 
 }
