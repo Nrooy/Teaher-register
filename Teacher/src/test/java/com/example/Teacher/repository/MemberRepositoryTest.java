@@ -2,6 +2,7 @@ package com.example.Teacher.repository;
 
 import com.example.Teacher.entities.Member;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.Teacher.respository.memberRespository;
@@ -24,6 +25,7 @@ public class MemberRepositoryTest {
     private TestEntityManager entityManager;
 
     @Test
+    @DisplayName("Trả về Member với tên đăng nhập và mật khẩu khả dụng")
     public void testCheckLoginMember_ReturnMemberWithValidUsernameAndPassword() throws ParseException {
 
         Member expectedMember = new Member();
@@ -47,6 +49,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("Trả về null với tên đăng nhập và mật khẩu không khả dụng")
     public void testCheckLoginMember_ReturnNullWithInvalidUsernameAndPassword() throws ParseException {
 
         Member expectedMember = new Member();

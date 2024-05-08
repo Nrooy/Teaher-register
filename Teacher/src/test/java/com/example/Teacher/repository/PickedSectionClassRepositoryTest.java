@@ -3,6 +3,7 @@ package com.example.Teacher.repository;
 import com.example.Teacher.entities.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class PickedSectionClassRepositoryTest {
     }
 
     @Test
+    @DisplayName("Lưu thành công và trả về pickedSectionClass đã lưu")
     public void testSave_ShouldSavePickedSectionClass(){
         PickedSectionClass pickedSectionClass = pickedSectionClassRepository1.save(pickedSectionClass1);
 //        Assertions.assertEquals(3, pickedSectionClass.getId());
@@ -83,6 +85,7 @@ public class PickedSectionClassRepositoryTest {
     }
 
     @Test
+    @DisplayName("Trả về pickedSectionClass theo id của teacher")
     public void testGetAllById_ShouldReturnPickedSectionClassesForTeacher(){
         int teacherId = teacher.getId();
         List<PickedSectionClass> list = pickedSectionClassRepository1.getById(teacherId);
@@ -91,6 +94,7 @@ public class PickedSectionClassRepositoryTest {
     }
 
     @Test
+    @DisplayName("Trả về pickedSectionClass theo id của department")
     public void testGetAllByIdDepartment_ShouldReturnPickedSectionClassesForDepartment(){
         int departmentId = teacher.getDepartment().getId();
         List<PickedSectionClass> list = pickedSectionClassRepository1.getAllByIdDepartment(departmentId);
@@ -99,19 +103,18 @@ public class PickedSectionClassRepositoryTest {
     }
 
     @Test
+    @DisplayName("Xóa thành công 1 pickedSectionClass")
     public void testDeleteById_ShouldDeletePickedSectionClass(){
         int id = pickedSectionClass1.getId();
 
-        System.out.println(pickedSectionClassRepository1.findAll().size());
         pickedSectionClassRepository1.deleteById(id);
-
-
         PickedSectionClass pickedSectionClass = entityManager.find(PickedSectionClass.class, id);
         Assertions.assertNull(pickedSectionClass);
         Assertions.assertEquals(0, pickedSectionClassRepository1.findAll().size());
     }
 
     @Test
+    @DisplayName("Trả về pickedSectionClass với id tồn tại")
     public void testFindById_ShouldReturnPickedSectionClass(){
         System.out.println(pickedSectionClass1.getId());
         PickedSectionClass pickedSectionClass2 = pickedSectionClassRepository1.findById(5).orElse(null);
