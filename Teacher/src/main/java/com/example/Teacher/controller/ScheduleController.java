@@ -121,12 +121,12 @@ public class ScheduleController {
 
     public List<SectionClass> getListSectionClassByListPickedSectionClass(List<PickedSectionClass> list) {
         List<SectionClass> sectionClassList = new ArrayList<>();
-        for (PickedSectionClass p : list) {
-            SectionClass s = p.getSectionClass();
-            sectionClassList.add(s);
+            for (PickedSectionClass p : list) {
+                SectionClass s = p.getSectionClass();
+                sectionClassList.add(s);
+            }
+            return sectionClassList;
         }
-        return sectionClassList;
-    }
 
     public List<Schedule> getALlListScheduleByListSectionClass(List<SectionClass> sectionClassList) {
         List<Schedule> scheduleList = new ArrayList<>();
@@ -161,6 +161,7 @@ public class ScheduleController {
         pickedSectionClass.setReview(0);
         pickedSectionClass.setSectionClass(sectionClass);
         pickedSectionClassService.save(pickedSectionClass);
+
     }
 
 }
