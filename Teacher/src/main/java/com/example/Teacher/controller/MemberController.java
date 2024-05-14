@@ -100,6 +100,9 @@ public class MemberController {
         session.setAttribute("listSubject", subjectList);
 
         session.setAttribute("listPicked", pickedSectionClasses);
+        String s = (String) session.getAttribute("error2");
+        session.removeAttribute("error2");
+        modelMap.addAttribute("error2", s);
 
         return "approve_schedule";
     }

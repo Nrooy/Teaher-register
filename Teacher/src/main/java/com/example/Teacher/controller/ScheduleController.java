@@ -69,7 +69,8 @@ public class ScheduleController {
             pickedSectionClass.setTeacher(teacher);
             pickedSectionClassService.save(pickedSectionClass);
         } else {
-            modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
+            session.setAttribute("error2", "Giảng viên được chọn đã bị trùng lịch dạy!");
+//            modelMap.addAttribute("error", "Lớp học phần được chọn đã bị trùng !");
         }
         return "redirect:/home2";
     }
